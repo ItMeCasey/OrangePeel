@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Checked the tooltip in JEI, REI, EMI and BEI (see docs/COMPATIBILITY.md). The screenshot tour classes are no longer in the release jars.
+- Checked the tooltip in JEI, REI, EMI and BEI (see docs/COMPATIBILITY.md); BEI draws the graphics from BEI 2026.11.4. The screenshot tour classes are no longer in the release jars.
 
 ## 2026.11.1
 
