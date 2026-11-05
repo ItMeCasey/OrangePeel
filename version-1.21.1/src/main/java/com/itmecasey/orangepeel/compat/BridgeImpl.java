@@ -46,7 +46,7 @@ public final class BridgeImpl implements Bridge {
         FoodData fd = p.getFoodData();
         boolean visible = Minecraft.getInstance().gameMode != null && Minecraft.getInstance().gameMode.canHurtPlayer()
                 && !(p.getVehicle() instanceof LivingEntity);
-        return new PlayerState(fd.getFoodLevel(), fd.getSaturationLevel(), fd.getExhaustionLevel(), p.getHealth(),
+        return new PlayerState(fd.getFoodLevel(), fd.getSaturationLevel(), com.itmecasey.orangepeel.ExhaustionSync.get(), p.getHealth(),
                 p.getMaxHealth(), p.getAbsorptionAmount(), visible);
     }
 
