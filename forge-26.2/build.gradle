@@ -44,6 +44,18 @@ repositories {
     maven fg.forgeMaven
     maven fg.minecraftLibsMaven
     mavenCentral()
+    // Dev-only: item viewers for the viewer check, e.g. -Pviewers=curse.maven:jei-238222:9393327 (never in a release build).
+    def imcUser = System.getenv('IMC_MAVEN_USER') ?: project.findProperty('imcMavenUser')
+    def imcPass = System.getenv('IMC_MAVEN_PASSWORD') ?: project.findProperty('imcMavenPassword')
+    if (imcUser && imcPass) {
+        maven {
+            name = 'ItMeCasey mirror'
+            url = 'https://itmecasey.com/maven'
+            credentials { username = imcUser; password = imcPass }
+            content { includeGroup 'curse.maven' }
+        }
+    }
+    maven { name = 'Cursemaven (fallback)'; url = 'https://cursemaven.com'; content { includeGroup 'curse.maven' } }
 }
 
 dependencies {
@@ -66,6 +78,7 @@ sourceSets.main.resources.srcDir generateModMetadata
 
 // Unit tests for the shared logic (food math, comparator ranking); they need no running game.
 dependencies {
+    (findProperty('viewers') ?: '').toString().split(',').findAll { it }.each { runtimeOnly(it.startsWith('file:') ? files(it.substring(5)) : it) }
     testImplementation platform("org.junit:junit-bom:5.11.4")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -73,4 +86,9 @@ dependencies {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+}
+
+// The development screenshot tour is not part of a release: it only runs from runClient (the class folders).
+tasks.named('jar') {
+    exclude 'com/itmecasey/orangepeel/compat/ShotTour*', 'com/itmecasey/orangepeel/compat/UiInput*'
 }

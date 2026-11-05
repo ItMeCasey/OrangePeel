@@ -5,7 +5,6 @@ import com.itmecasey.orangepeel.client.FoodTooltipData;
 import com.itmecasey.orangepeel.compat.FoodTooltipComponent;
 import com.itmecasey.orangepeel.compat.BridgeImpl;
 import com.itmecasey.orangepeel.compat.HudDrawImpl;
-import com.itmecasey.orangepeel.compat.ShotTour;
 import com.itmecasey.orangepeel.OrangePeel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
@@ -40,7 +39,7 @@ final class ForgeClientSetup {
         if (System.getenv("ORANGEPEEL_SHOTS") != null) {
             MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
                 if (e.phase == TickEvent.Phase.END) {
-                    ShotTour.tick();
+                    ClientHooks.devTour();
                 }
             });
         }

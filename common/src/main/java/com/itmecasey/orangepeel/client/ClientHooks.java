@@ -3,6 +3,7 @@ package com.itmecasey.orangepeel.client;
 import com.itmecasey.orangepeel.Config;
 import com.itmecasey.orangepeel.FoodInfo;
 import com.itmecasey.orangepeel.MealComparator;
+import com.itmecasey.orangepeel.OrangePeel;
 import com.itmecasey.orangepeel.PlayerState;
 import com.itmecasey.orangepeel.TooltipModel;
 import com.itmecasey.orangepeel.api.OrangePeelApi;
@@ -21,6 +22,34 @@ public final class ClientHooks {
     private static final String DUPLICATE = "orangepeel:graphic";
     private static Bridge bridge;
     /** Set only by the dev screenshot tour: a stack whose tooltip is drawn at a fixed spot every frame. */
+    private static java.lang.reflect.Method devTour;
+    private static boolean devTourLooked;
+
+    /**
+     * Development only: runs the screenshot tour when it is on the classpath. The tour classes are left out of the release
+     * jar, so they are looked up by name and nothing happens in a release.
+     */
+    public static void devTour() {
+        if (!devTourLooked) {
+            devTourLooked = true;
+            if (System.getenv("ORANGEPEEL_SHOTS") != null) {
+                try {
+                    devTour = Class.forName("com.itmecasey.orangepeel.compat.ShotTour").getMethod("tick");
+                } catch (ReflectiveOperationException e) {
+                    OrangePeel.LOGGER.warn("ORANGEPEEL_SHOTS is set but the screenshot tour is not in this build");
+                }
+            }
+        }
+        if (devTour != null) {
+            try {
+                devTour.invoke(null);
+            } catch (ReflectiveOperationException e) {
+                devTour = null;
+                OrangePeel.LOGGER.warn("The screenshot tour failed", e);
+            }
+        }
+    }
+
     public static volatile ItemStack tourTooltip = ItemStack.EMPTY;
 
     private ClientHooks() {

@@ -104,7 +104,7 @@ public final class ShotTour {
     /** Waits for the player to stand in the world, then plans the tour. */
     private static void waitForWorld(Minecraft minecraft) {
         if (minecraft.level == null || minecraft.player == null || minecraft.gui.screen() != null
-                || minecraft.getSingleplayerServer() == null || ++idle < 40) {
+                || minecraft.getSingleplayerServer() == null || ++idle < 40 || (System.getenv("ORANGEPEEL_VIEWER") != null && minecraft.getWindow().getWidth() < 1800 && idle < 1500)) {
             return;
         }
         ground = minecraft.level.getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0);
@@ -122,7 +122,14 @@ public final class ShotTour {
         if (step == null) {
             return;
         }
-        step.action().run();
+        try {
+            step.action().run();
+        } catch (RuntimeException e) {
+            OrangePeel.LOGGER.error("ORANGEPEEL-SHOTS FAILED", e);
+            stage = Stage.DONE;
+            Minecraft.getInstance().stop();
+            return;
+        }
         Step next = STEPS.peek();
         wait = next == null ? 0 : next.delay();
     }
@@ -130,8 +137,12 @@ public final class ShotTour {
     // --- The tour ----------------------------------------------------------------------------
 
     private static void planTour() {
+        if (System.getenv("ORANGEPEEL_VIEWER") != null) {
+            planViewer();
+            return;
+        }
         then(0, () -> {
-            server("gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false",
+            server("gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamerule announceAdvancements false", "gamerule sendCommandFeedback false",
                     "time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
                     "give @p minecraft:cooked_beef 8", "give @p minecraft:bread 12", "give @p minecraft:apple 5",
                     "give @p minecraft:golden_apple 2", "give @p minecraft:rotten_flesh 9",
@@ -214,6 +225,65 @@ public final class ShotTour {
                 }
             });
         }
+    }
+
+
+    private static String env(String key) {
+        String value = System.getenv(key);
+        return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private static double[] xy(String text) {
+        String[] parts = text.split(",");
+        return new double[] {Double.parseDouble(parts[0].trim()), Double.parseDouble(parts[1].trim())};
+    }
+
+    /**
+     * The item viewer check: opens the inventory with the viewer loaded, shoots it, optionally clicks the viewer's search
+     * box and types a food name (ORANGEPEEL_CLICK "x,y" and ORANGEPEEL_TYPE), then hovers each point in
+     * ORANGEPEEL_HOVER ("x,y;x,y") and shoots the tooltip the viewer draws. Coordinates are screenshot pixels.
+     */
+    private static void planViewer() {
+        String viewer = System.getenv("ORANGEPEEL_VIEWER");
+        then(0, () -> {
+            server("gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamerule announceAdvancements false", "gamerule sendCommandFeedback false",
+                    "time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
+                    "give @p minecraft:cooked_beef 8", "give @p minecraft:bread 12", "give @p minecraft:apple 5",
+                    "give @p minecraft:golden_apple 2");
+            player().getAbilities().flying = false;
+        });
+        then(10, () -> setHunger(8, 3.0F, 12.0F));
+        then(2, () -> { Minecraft.getInstance().gui.setScreen(new InventoryScreen(player())); });
+        shoot("viewer_" + viewer + "_screen", 80);
+        String click = env("ORANGEPEEL_CLICK");
+        if (click != null) {
+            then(2, () -> {
+                double[] p = xy(click);
+                UiInput.click(p[0], p[1]);
+            });
+            String type = env("ORANGEPEEL_TYPE");
+            if (type != null) {
+                then(20, UiInput::clear);
+                then(10, () -> UiInput.type(type));
+            }
+            shoot("viewer_" + viewer + "_search", 40);
+        }
+        String hover = env("ORANGEPEEL_HOVER");
+        if (hover != null) {
+            int i = 0;
+            for (String point : hover.split(";")) {
+                double[] p = xy(point);
+                then(2, () -> UiInput.move(p[0], p[1]));
+                shoot("viewer_" + viewer + "_hover" + (i++), 30);
+            }
+        }
+        then(10, () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            minecraft.options.pauseOnLostFocus = pauseOnLostFocus;
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS DONE");
+            stage = Stage.DONE;
+            minecraft.stop();
+        });
     }
 
     /** Puts the camera two blocks south of the thing at this x and a little above, looking at it. */

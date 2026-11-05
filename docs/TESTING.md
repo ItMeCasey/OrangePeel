@@ -24,8 +24,8 @@ Checked on 2026-11-05. "Seen" means a screenshot from a real game client that wa
 ## What the client tour does not cover
 
 - The tooltip is drawn at a fixed spot by the tour (inside the inventory screen on 26.x), not by hovering a slot with a mouse.
-- Item viewers (JEI, EMI, REI, BEI) have not been run with OrangePeel. The lines are added through the game's normal item
-  tooltip event, which those viewers use, but that is not confirmed.
+- Item viewers: run on NeoForge only, and not on every version. See [COMPATIBILITY.md](COMPATIBILITY.md) for what each
+  viewer drew on each version and why some cells were not run. No viewer was run on Forge.
 - The exhaustion underlay needs a server sync that is not built; it never shows.
 - Multiplayer: not tested. OrangePeel is client side.
 - Other mods' foods: the code reads the game's own food data, but only vanilla foods were run.

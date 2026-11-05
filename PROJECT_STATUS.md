@@ -1,7 +1,7 @@
 # Project Status
 <!-- status-format: 1 -->
 Updated: 2026-11-05
-Summary: Food HUD and tooltip mod with a meal comparator; all eight Forge and NeoForge layers compile, pass unit tests, load on a server and were seen in a real client; first release and item viewer checks are next.
+Summary: Food HUD and tooltip mod with a meal comparator; all eight Forge and NeoForge layers compile, pass unit tests, load on a server and were seen in a real client; first release and item viewer checks are partly done (see docs/COMPATIBILITY.md).
 Spend: none
 
 ## Foundation
@@ -25,7 +25,11 @@ Spend: none
 - [~] Unit tests run in CI on every layer (workflow written, not run yet: no remote) (w:1)
 - [x] Headless server load check on every layer (w:3)
 - [x] Client check with screenshots on every layer (w:4)
-- [ ] Item viewer check with JEI, EMI and REI loaded (w:3)
+- [~] Item viewer check (NeoForge: JEI 1.21.1 and 26.1.2, REI and EMI 1.21.1 draw the graphics; released BEI text only; JEI 26.2/26.3, REI 26.1.2 and Forge viewers not run; see docs/COMPATIBILITY.md) (w:3)
+- [ ] Rerun the not-tested viewer cells (JEI 26.2/26.3, REI 26.1.2, Forge JEI 1.21.1 and BEI) after the search-typing step is fixed (w:2)
+- [ ] BEI 2026.11.3: drop the text lines the graphic replaces (BEI task T-029), then recheck (w:1)
+- [x] Compatibility standard: no recipes, blocks or entities, so no SMWTI/Jade/recipe integration needed; stated in docs/COMPATIBILITY.md (w:1)
+- [x] Screenshot tour classes left out of release jars (w:1)
 - [x] build.yml and release.yml with dry_run input (w:2)
 - [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
 - [x] Release workflow dry run passed (ids resolved for all four jars) (w:1)

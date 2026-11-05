@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Checked the tooltip in JEI, REI, EMI and BEI (see docs/COMPATIBILITY.md). The screenshot tour classes are no longer in the release jars.
+
 ## 2026.11.1
 
 First release. One combined jar per Minecraft version (1.21.1, 26.1.2, 26.2, 26.3) for Forge and NeoForge.

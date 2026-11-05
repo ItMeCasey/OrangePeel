@@ -1,6 +1,7 @@
 """Runs the dev screenshot tour on a real game client for one layer and collects the screenshots.
 
-Usage: python scripts/client_tour.py <layer> [<layer> ...]     e.g. neoforge-1.21.1 forge-26.2
+Usage: python scripts/client_tour.py [--viewer <name> --deps <curse.maven:...,...>] <layer> [<layer> ...]
+       e.g. neoforge-1.21.1 forge-26.2. With --viewer the item viewer check runs instead of the HUD tour (see docs/TESTING.md).
 
 Starts `gradlew runClient` with ORANGEPEEL_SHOTS set, moves the game window to DISPLAY6 (the right-hand monitor) as soon as it
 exists, waits for the tour to finish (it quits the game itself), and prints the screenshot names. The game is muted and the
@@ -20,11 +21,11 @@ PLACE = r"C:\Users\casey\.claude\tools\place-window.ps1"
 TIMEOUT = 600
 OPTIONS = (
     "soundCategory_master:0.0\nmusic:0.0\npauseOnLostFocus:false\nonboardAccessibility:false\n"
-    "skipMultiplayerWarning:true\ntutorialStep:none\nfullscreen:false\nguiScale:3\nlang:en_us\n"
+    "skipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nfullscreen:false\nguiScale:3\nlang:en_us\n"
 )
 
 
-def tour(layer):
+def tour(layer, viewer=None, deps=""):
     folder = ROOT / layer
     run = folder / "run"
     run.mkdir(exist_ok=True)
@@ -33,8 +34,12 @@ def tour(layer):
     if shots.exists():
         shutil.rmtree(shots)
     env = dict(os.environ, ORANGEPEEL_SHOTS="1")
+    extra = []
+    if viewer:
+        env["ORANGEPEEL_VIEWER"] = viewer
+        extra = [f"-Pviewers={deps}"] if deps else []
     log = []
-    proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runClient", "--no-daemon", "-q"], cwd=folder,
+    proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runClient", "--no-daemon", "-q", *extra], cwd=folder,
                             env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
 
     def pump():
@@ -67,9 +72,19 @@ def tour(layer):
 
 
 if __name__ == "__main__":
+    args = sys.argv[1:]
+    viewer, deps = None, ""
+    if "--viewer" in args:
+        i = args.index("--viewer")
+        viewer = args[i + 1]
+        del args[i:i + 2]
+    if "--deps" in args:
+        i = args.index("--deps")
+        deps = args[i + 1]
+        del args[i:i + 2]
     bad = 0
-    for layer in sys.argv[1:]:
-        result = tour(layer)
+    for layer in args:
+        result = tour(layer, viewer, deps)
         print(result, flush=True)
         bad += result.startswith("TOUR FAIL")
     sys.exit(1 if bad else 0)
