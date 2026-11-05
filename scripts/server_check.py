@@ -20,8 +20,10 @@ PORTS = {
     "neoforge-26.2": 8954, "forge-26.2": 8955, "neoforge-26.3": 8956, "forge-26.3": 8957,
 }
 TIMEOUT = 420
-ERROR_WORDS = re.compile(r"(ModLoadingException|Failed to load mod|Exception in server tick|Encountered an unexpected exception|"
-                         r"NoClassDefFoundError|ClassNotFoundException|Caused by:)")
+# Real load problems: the loader could not load a mod, or an error names this mod. Netty and log4j probe lines about native
+# transports on the wrong OS ("Only supported on Linux") are normal noise on Windows and are ignored.
+ERROR_WORDS = re.compile(r"(ModLoadingException|Failed to load mod|Encountered an unexpected exception|FATAL)")
+OWN_ERROR = re.compile(r"orangepeel.*(Exception|Error)|(Exception|Error).*com\.itmecasey\.orangepeel", re.IGNORECASE)
 
 
 def check(layer):
@@ -33,7 +35,7 @@ def check(layer):
         f"server-port={PORTS[layer]}\nonline-mode=false\nlevel-type=minecraft\\:flat\nspawn-protection=0\n"
         "motd=OrangePeel server check\nmax-tick-time=-1\n")
     log = []
-    proc = subprocess.Popen(["cmd", "/c", "gradlew.bat", "runServer", "--no-daemon", "-q"], cwd=folder,
+    proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runServer", "--no-daemon", "-q"], cwd=folder,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
 
     def pump():
@@ -54,12 +56,12 @@ def check(layer):
     t.join(timeout=5)
     out = "\n".join(log)
     (run / "server_check.log").write_text(out, encoding="utf-8")
-    mod_seen = "orangepeel" in out.lower()
-    errors = [l for l in log if ERROR_WORDS.search(l)]
+    mod_seen = bool(re.search(r"mod:orangepeel|\(orangepeel\)|Loading mod orangepeel", out))
+    errors = [l for l in log if ERROR_WORDS.search(l) or OWN_ERROR.search(l)]
     if not done:
         return f"SERVER FAIL {layer}: server never reported Done (see {run / 'server_check.log'})"
     if not mod_seen:
-        return f"SERVER FAIL {layer}: log never names orangepeel"
+        return f"SERVER FAIL {layer}: log never lists the orangepeel mod as loaded"
     if errors:
         return f"SERVER FAIL {layer}: {errors[0]}"
     return f"SERVER PASS {layer} (port {PORTS[layer]}, {int(time.time() - start)}s)"

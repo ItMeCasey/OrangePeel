@@ -10,4 +10,7 @@ public interface HudDraw {
 
     /** Draws a vanilla GUI sprite such as "hud/food_full", tinted with the ARGB color (alpha controls opacity). */
     void sprite(String name, int x, int y, int w, int h, int argb);
+
+    /** Draws the item's normal tooltip, including OrangePeel's lines, at a fixed spot. Used by the screenshot tour. */
+    void tooltip(net.minecraft.world.item.ItemStack stack, int x, int y);
 }

@@ -38,4 +38,9 @@ public final class HudDrawImpl implements HudDraw {
         g.setColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
     }
+
+    @Override
+    public void tooltip(net.minecraft.world.item.ItemStack stack, int x, int y) {
+        g.renderTooltip(net.minecraft.client.Minecraft.getInstance().font, stack, x, y);
+    }
 }

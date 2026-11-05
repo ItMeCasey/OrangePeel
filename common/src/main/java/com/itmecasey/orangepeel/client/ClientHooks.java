@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 /** What the loader layers call from their events. Client side only. */
 public final class ClientHooks {
     private static Bridge bridge;
+    /** Set only by the dev screenshot tour: a stack whose tooltip is drawn at a fixed spot every frame. */
+    public static volatile ItemStack tourTooltip = ItemStack.EMPTY;
 
     private ClientHooks() {
     }
@@ -61,6 +63,9 @@ public final class ClientHooks {
         ItemStack held = bridge.heldFood();
         FoodInfo food = held.isEmpty() ? null : bridge.food(held);
         FoodHud.render(draw, player, food);
+        if (!tourTooltip.isEmpty()) {
+            draw.tooltip(tourTooltip, draw.width() / 2 - 60, draw.height() / 2 - 70);
+        }
     }
 
     static int color(TooltipModel.Tone tone) {

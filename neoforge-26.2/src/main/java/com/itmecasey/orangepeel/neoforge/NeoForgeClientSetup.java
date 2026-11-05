@@ -4,8 +4,10 @@ import com.itmecasey.orangepeel.OrangePeel;
 import com.itmecasey.orangepeel.client.ClientHooks;
 import com.itmecasey.orangepeel.compat.BridgeImpl;
 import com.itmecasey.orangepeel.compat.HudDrawImpl;
+import com.itmecasey.orangepeel.compat.ShotTour;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -22,5 +24,9 @@ final class NeoForgeClientSetup {
                 Identifier.fromNamespaceAndPath(OrangePeel.MODID, "food_overlay"),
                 (graphics, delta) -> ClientHooks.onHud(new HudDrawImpl(graphics))));
         NeoForge.EVENT_BUS.addListener((ItemTooltipEvent e) -> ClientHooks.onTooltip(e.getItemStack(), e.getToolTip()));
+        // Development only: the screenshot tour runs when this variable is set.
+        if (System.getenv("ORANGEPEEL_SHOTS") != null) {
+            NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> ShotTour.tick());
+        }
     }
 }

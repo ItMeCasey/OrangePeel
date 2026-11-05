@@ -46,11 +46,21 @@ public final class TooltipModel {
             }
         }
 
+        if (player != null && Config.showComparator) {
+            List<FoodInfo> all = MealComparator.distinct(food, carried);
+            FoodInfo fit = all.size() > 1 ? MealComparator.bestForHunger(player, all) : null;
+            if (fit != null && fit.id().equals(food.id())) {
+                lines.add(new Line("Best pick for your hunger right now", Tone.BEST));
+            } else if (fit != null && FoodMath.wastedHunger(player.foodLevel(), food.nutrition()) > 0) {
+                lines.add(new Line("Less waste right now: " + fit.name(), Tone.DIM));
+            }
+        }
+
         if (player != null && Config.showWaste) {
             int waste = FoodMath.wastedHunger(player.foodLevel(), food.nutrition());
             if (waste > 0) {
-                lines.add(new Line("Wastes " + waste + " hunger " + (waste == 1 ? "point" : "points")
-                        + " if eaten now", Tone.WARN));
+                lines.add(new Line("Wastes " + trim(waste / 2f) + (waste == 2 ? " shank" : " shanks")
+                        + " of hunger if eaten now", Tone.WARN));
             }
         }
 

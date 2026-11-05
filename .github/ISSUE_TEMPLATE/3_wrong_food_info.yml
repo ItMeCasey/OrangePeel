@@ -1,0 +1,50 @@
+name: Wrong food info
+description: A food shows wrong hunger, saturation, effects or ranking in the tooltip or on the hunger bar.
+title: "[Food] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OrangePeel reads the numbers from the game's own food data, so modded foods work without special support.
+        If a food shows numbers that don't match what happens when you eat it, tell us which food and what you saw.
+  - type: input
+    id: food
+    attributes:
+      label: Food and its id
+      description: Hold F3+H in game to show item ids in tooltips.
+      placeholder: Golden Apple (minecraft:golden_apple), or a modded food
+    validations:
+      required: true
+  - type: textarea
+    id: shown
+    attributes:
+      label: What OrangePeel shows
+      description: Paste the tooltip lines, or a screenshot.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happens when you eat it
+      description: Hunger and saturation before and after, or the effects you got.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OrangePeel version
+    validations:
+      required: true
+  - type: input
+    id: minecraft
+    attributes:
+      label: Minecraft and loader versions
+      placeholder: Minecraft 1.21.1, NeoForge ...
+    validations:
+      required: true
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods
+      description: Especially the mod that adds the food, and any mod that changes food or hunger.

@@ -4,8 +4,10 @@ import com.itmecasey.orangepeel.OrangePeel;
 import com.itmecasey.orangepeel.client.ClientHooks;
 import com.itmecasey.orangepeel.compat.BridgeImpl;
 import com.itmecasey.orangepeel.compat.HudDrawImpl;
+import com.itmecasey.orangepeel.compat.ShotTour;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 /** Client-only wiring, in its own class so a dedicated server never loads the client types it names. */
@@ -20,5 +22,9 @@ final class ForgeClientSetup {
                 (graphics, delta) -> ClientHooks.onHud(new HudDrawImpl(graphics))));
         ItemTooltipEvent.BUS.addListener((ItemTooltipEvent e) ->
                 ClientHooks.onTooltip(e.getItemStack(), e.getToolTip()));
+        // Development only: the screenshot tour runs when this variable is set.
+        if (System.getenv("ORANGEPEEL_SHOTS") != null) {
+            TickEvent.ClientTickEvent.Post.BUS.addListener((TickEvent.ClientTickEvent.Post e) -> ShotTour.tick());
+        }
     }
 }

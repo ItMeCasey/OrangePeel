@@ -32,4 +32,9 @@ public final class HudDrawImpl implements HudDraw {
     public void sprite(String name, int x, int y, int w, int h, int argb) {
         g.blitSprite(RenderPipelines.GUI_TEXTURED, Identifier.withDefaultNamespace(name), x, y, w, h, argb);
     }
+
+    @Override
+    public void tooltip(net.minecraft.world.item.ItemStack stack, int x, int y) {
+        g.setTooltipForNextFrame(net.minecraft.client.Minecraft.getInstance().font, stack, x, y);
+    }
 }

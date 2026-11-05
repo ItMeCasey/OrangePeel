@@ -1,0 +1,38 @@
+name: Feature request
+description: An idea for something OrangePeel could do.
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      placeholder: Show how long a food takes to eat.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help?
+      description: What you're trying to do in game, and what you do now instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: What part of OrangePeel is it about?
+      options:
+        - Hunger bar overlays
+        - Food tooltip
+        - Meal comparator
+        - Settings and config
+        - API for other mods
+        - Support for another mod's foods
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Sketch or example
+      description: A mockup, a screenshot from another mod, or a short description of how it would work.

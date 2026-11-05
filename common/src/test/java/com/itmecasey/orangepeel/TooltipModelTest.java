@@ -44,7 +44,7 @@ class TooltipModelTest {
         FoodInfo bread = food("bread", 5, 6f);
         PlayerState nearlyFull = new PlayerState(18, 5f, 0f, 20f, 20f, 0f, true);
         PlayerState hungry = new PlayerState(8, 0f, 0f, 20f, 20f, 0f, true);
-        assertTrue(has(TooltipModel.build(bread, nearlyFull, List.of()), "Wastes 3 hunger points",
+        assertTrue(has(TooltipModel.build(bread, nearlyFull, List.of()), "Wastes 1.5 shanks of hunger",
                 TooltipModel.Tone.WARN));
         assertFalse(TooltipModel.build(bread, hungry, List.of()).stream()
                 .anyMatch(l -> l.tone() == TooltipModel.Tone.WARN));

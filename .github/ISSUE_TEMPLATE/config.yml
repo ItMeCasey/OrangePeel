@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How OrangePeel works and what it covers
+    url: https://itmecasey.com/wiki/orangepeel/
+    about: The hunger bar overlays, the meal comparator, settings and the API. Read this first.
+  - name: Troubleshooting
+    url: https://itmecasey.com/wiki/orangepeel/?p=troubleshooting
+    about: Overlays missing, tooltip lines missing, and the exhaustion bar.

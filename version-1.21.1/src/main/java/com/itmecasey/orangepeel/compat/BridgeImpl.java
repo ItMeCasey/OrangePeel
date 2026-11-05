@@ -16,7 +16,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.component.DataComponents;
 
-/** Minecraft 1.21.1: food data is the FOOD component, with saturation stored as a modifier. */
+/** Minecraft 1.21.1: food data is the FOOD component, with its status effects listed on the component itself. */
 public final class BridgeImpl implements Bridge {
     @Override
     public FoodInfo food(ItemStack stack) {
@@ -31,8 +31,8 @@ public final class BridgeImpl implements Bridge {
                     inst.getDuration(), possible.probability(),
                     inst.getEffect().value().getCategory() == MobEffectCategory.BENEFICIAL));
         }
-        // 1.21.1 stores saturation as a modifier; the game adds nutrition * modifier * 2 when the food is eaten.
-        float saturation = props.nutrition() * props.saturation() * 2f;
+        // Since 1.20.5 the FOOD component holds the absolute saturation points, not a modifier.
+        float saturation = props.saturation();
         return new FoodInfo(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), stack.getHoverName().getString(),
                 props.nutrition(), saturation, props.eatDurationTicks(), effects);
     }
