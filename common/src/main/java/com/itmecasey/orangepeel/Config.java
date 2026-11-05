@@ -22,8 +22,12 @@ public final class Config {
     public static volatile boolean showSaturationOverlay = true;
     public static volatile boolean showExhaustionUnderlay = true;
     public static volatile boolean showHealthPreview = true;
+    /** true keeps the hunger preview at a steady opacity instead of pulsing. */
+    public static volatile boolean steadyPreview = false;
 
     public static volatile boolean showTooltip = true;
+    /** true draws shanks, saturation, hearts and a comparison bar in the tooltip; false keeps text lines only. */
+    public static volatile boolean graphicalTooltip = true;
     public static volatile boolean showComparator = true;
     public static volatile boolean showWaste = true;
     public static volatile boolean showEffects = true;
@@ -68,7 +72,9 @@ public final class Config {
         showSaturationOverlay = boolOf(p, "showSaturationOverlay", showSaturationOverlay);
         showExhaustionUnderlay = boolOf(p, "showExhaustionUnderlay", showExhaustionUnderlay);
         showHealthPreview = boolOf(p, "showHealthPreview", showHealthPreview);
+        steadyPreview = boolOf(p, "steadyPreview", steadyPreview);
         showTooltip = boolOf(p, "showTooltip", showTooltip);
+        graphicalTooltip = boolOf(p, "graphicalTooltip", graphicalTooltip);
         showComparator = boolOf(p, "showComparator", showComparator);
         showWaste = boolOf(p, "showWaste", showWaste);
         showEffects = boolOf(p, "showEffects", showEffects);
@@ -80,7 +86,9 @@ public final class Config {
         p.setProperty("showSaturationOverlay", Boolean.toString(showSaturationOverlay));
         p.setProperty("showExhaustionUnderlay", Boolean.toString(showExhaustionUnderlay));
         p.setProperty("showHealthPreview", Boolean.toString(showHealthPreview));
+        p.setProperty("steadyPreview", Boolean.toString(steadyPreview));
         p.setProperty("showTooltip", Boolean.toString(showTooltip));
+        p.setProperty("graphicalTooltip", Boolean.toString(graphicalTooltip));
         p.setProperty("showComparator", Boolean.toString(showComparator));
         p.setProperty("showWaste", Boolean.toString(showWaste));
         p.setProperty("showEffects", Boolean.toString(showEffects));

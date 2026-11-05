@@ -5,10 +5,12 @@ tooltip ranks it against the other food in your inventory.
 
 ## Features
 
-- **Hunger bar preview:** a pulsing preview of the hunger the held food restores, a saturation strip under the shanks, and a
-  preview of the health regeneration the food adds.
-- **Food tooltip:** hunger and saturation, effect names with levels and durations, an orange warning when hunger would be
-  wasted, and how long the food keeps you full.
+- **Hunger bar preview:** a pulsing preview of the hunger the held food restores, golden rails around the shanks that
+  saturation covers, and a preview of the health regeneration the food adds (`steadyPreview=true` stops the pulse).
+- **Food tooltip:** drawn shanks for the hunger the food restores (the part that would be wasted fades to orange), golden
+  shanks for saturation, hearts for the regeneration it adds, and a drawn comparison bar, under plain-text lines with the
+  numbers, effect names with levels and durations, a waste warning, and how long the food keeps you full. The text lines
+  are the fallback for item viewers that cannot draw tooltip graphics; `graphicalTooltip=false` keeps text only.
 - **Meal comparator:** hover a food to see how it ranks against the other foods you carry ("Better than 4 of your other 5
   foods"), with a bar showing how far it is from your best food, a flag on the best one, and a note when another food fits
   your hunger better right now.
@@ -23,8 +25,9 @@ OrangePeel is client side; it also loads on a dedicated server and does nothing 
 
 ## Tested
 
-See [PROJECT_STATUS.md](PROJECT_STATUS.md) and the table in [docs/TESTING.md](docs/TESTING.md) for exactly what has been built,
-unit tested, loaded on a server and seen in a game client, per loader and version.
+Every layer compiles, passes the unit tests, loads on a dedicated server and was seen in a real game client (hunger bar
+overlays and the tooltip). Item viewers (JEI, EMI, REI, BEI) and other mods' foods have not been run. See
+[docs/TESTING.md](docs/TESTING.md) for the table and what the checks do not cover.
 
 ## Known gaps
 

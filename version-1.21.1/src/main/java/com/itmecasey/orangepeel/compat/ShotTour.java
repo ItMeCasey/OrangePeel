@@ -144,27 +144,38 @@ public final class ShotTour {
             Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
             Minecraft.getInstance().options.hideGui = false;
         });
-        then(10, () -> setHunger(8, 1.0F, 12.0F));
+        then(10, () -> setHunger(8, 3.0F, 12.0F));
         then(2, () -> selectSlot(0));
-        shoot("hud_steak_hungry", SETTLE);
-        then(2, () -> ClientHooks.tourTooltip = player().getInventory().getItem(0));
+        shoot("hud_steak_hungry_a", SETTLE);
+        shoot("hud_steak_hungry_b", 9);
+        shoot("hud_steak_hungry_c", 9);
+        then(2, () -> showTip(0));
         shoot("tooltip_steak_hungry", 10);
-        then(2, () -> ClientHooks.tourTooltip = player().getInventory().getItem(1));
+        then(2, () -> showTip(1));
         shoot("tooltip_bread_hungry", 10);
-        then(2, () -> ClientHooks.tourTooltip = ItemStack.EMPTY);
+        then(2, () -> hideTip());
+
+        then(2, () -> selectSlot(1));
+        shoot("hud_bread_a", SETTLE);
+        shoot("hud_bread_b", 9);
+        shoot("hud_bread_c", 9);
 
         then(2, () -> selectSlot(4));
         shoot("hud_rotten_flesh", SETTLE);
-        then(2, () -> ClientHooks.tourTooltip = player().getInventory().getItem(4));
+        then(2, () -> showTip(4));
         shoot("tooltip_rotten_flesh", 10);
-        then(2, () -> ClientHooks.tourTooltip = ItemStack.EMPTY);
+        then(2, () -> hideTip());
 
-        then(2, () -> setHunger(19, 5.0F, 20.0F));
+        then(2, () -> setHunger(17, 5.0F, 12.0F));
         then(2, () -> selectSlot(3));
-        shoot("hud_golden_apple_nearly_full", SETTLE);
-        then(2, () -> ClientHooks.tourTooltip = player().getInventory().getItem(1));
+        shoot("hud_golden_apple_a", SETTLE);
+        shoot("hud_golden_apple_b", 9);
+        shoot("hud_golden_apple_c", 9);
+        then(2, () -> showTip(3));
+        shoot("tooltip_golden_apple_nearly_full", 10);
+        then(2, () -> showTip(1));
         shoot("tooltip_bread_nearly_full", 10);
-        then(2, () -> ClientHooks.tourTooltip = ItemStack.EMPTY);
+        then(2, () -> hideTip());
 
         then(2, () -> setHunger(10, 2.0F, 20.0F));
         then(2, () -> selectSlot(0));
@@ -179,6 +190,21 @@ public final class ShotTour {
             stage = Stage.DONE;
             minecraft.stop();
         });
+    }
+
+    /** On 26.x tooltips only draw while a screen is open, so the tour opens the inventory around them. */
+    private static void showTip(int slot) {
+        if (false) {
+            Minecraft.getInstance().setScreen(new InventoryScreen(player()));
+        }
+        ClientHooks.tourTooltip = player().getInventory().getItem(slot);
+    }
+
+    private static void hideTip() {
+        ClientHooks.tourTooltip = ItemStack.EMPTY;
+        if (false) {
+            Minecraft.getInstance().setScreen(null);
+        }
     }
 
     private static void setHunger(int food, float saturation, float health) {

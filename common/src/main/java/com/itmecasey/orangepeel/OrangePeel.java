@@ -16,5 +16,6 @@ public final class OrangePeel {
     /** Called once by each loader entry point. */
     public static void init(Supplier<Path> configFolder) {
         Config.load(configFolder.get().resolve("orangepeel-client.properties"));
+        LOGGER.info("OrangePeel loaded");
     }
 }

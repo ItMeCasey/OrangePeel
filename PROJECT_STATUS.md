@@ -1,7 +1,7 @@
 # Project Status
 <!-- status-format: 1 -->
 Updated: 2026-11-05
-Summary: Food HUD and tooltip mod with a meal comparator; all eight Forge and NeoForge layers compile and pass unit tests, server and client checks are in progress.
+Summary: Food HUD and tooltip mod with a meal comparator; all eight Forge and NeoForge layers compile, pass unit tests, load on a server and were seen in a real client; first release and item viewer checks are next.
 Spend: none
 
 ## Foundation
@@ -12,9 +12,9 @@ Spend: none
 
 ## Features
 - [x] Food data read from the game, modded foods included (w:3)
-- [~] Hunger bar preview, saturation overlay, health regen preview (w:4)
-- [ ] Exhaustion underlay fed by a server sync (w:3)
-- [x] Food tooltip with hunger, saturation, effects and waste warning (w:3)
+- [x] Hunger bar preview, saturation rails, health regen preview, seen on all eight layers (w:4)
+- [ ] Exhaustion underlay fed by a server sync (later, not in the first release) (w:3)
+- [x] Food tooltip: drawn shanks, saturation, hearts and comparison bar plus text lines, seen on all eight layers (w:4)
 - [x] Meal comparator: rank against inventory, delta bar, best-food flag (w:4)
 - [x] Fullness timer line (w:1)
 - [x] Config file: opacity, offset, switches per overlay and tooltip line (w:2)
@@ -23,8 +23,9 @@ Spend: none
 ## Testing and release
 - [x] Unit tests for food math, comparator and tooltip lines (w:3)
 - [~] Unit tests run in CI on every layer (workflow written, not run yet: no remote) (w:1)
-- [~] Headless server load check on every layer (w:3)
-- [ ] Client check with screenshots on every layer (w:4)
+- [x] Headless server load check on every layer (w:3)
+- [x] Client check with screenshots on every layer (w:4)
+- [ ] Item viewer check with JEI, EMI and REI loaded (w:3)
 - [x] build.yml and release.yml with dry_run input (w:2)
 - [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
 - [ ] First release tagged and uploaded (w:2)

@@ -2,17 +2,23 @@ package com.itmecasey.orangepeel.client;
 
 import com.itmecasey.orangepeel.Config;
 import com.itmecasey.orangepeel.FoodInfo;
+import com.itmecasey.orangepeel.MealComparator;
 import com.itmecasey.orangepeel.PlayerState;
 import com.itmecasey.orangepeel.TooltipModel;
 import com.itmecasey.orangepeel.api.OrangePeelApi;
 import java.util.ArrayList;
 import java.util.List;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 /** What the loader layers call from their events. Client side only. */
 public final class ClientHooks {
+    /** Marks text lines that the drawn tooltip block repeats; an invisible style insertion. */
+    private static final String DUPLICATE = "orangepeel:graphic";
     private static Bridge bridge;
     /** Set only by the dev screenshot tour: a stack whose tooltip is drawn at a fixed spot every frame. */
     public static volatile ItemStack tourTooltip = ItemStack.EMPTY;
@@ -44,11 +50,50 @@ public final class ClientHooks {
             }
         }
         for (TooltipModel.Line line : TooltipModel.build(food, player, carried)) {
-            tooltip.add(Component.literal(line.text()).withStyle(Style.EMPTY.withColor(color(line.tone()))));
+            Style style = Style.EMPTY.withColor(color(line.tone()));
+            if (line.graphic()) {
+                style = style.withInsertion(DUPLICATE);
+            }
+            tooltip.add(Component.literal(line.text()).withStyle(style));
         }
         for (OrangePeelApi.TooltipProvider provider : OrangePeelApi.providers()) {
             provider.addLines(stack, food, tooltip);
         }
+    }
+
+    /**
+     * The data for the drawn part of the tooltip, or null when the stack is not a food or graphics are off. Loader layers
+     * add it to the tooltip's components; the text lines from {@link #onTooltip} stay as the fallback.
+     */
+    public static FoodTooltipData graphicData(ItemStack stack) {
+        if (bridge == null || !Config.showTooltip || !Config.graphicalTooltip || stack.isEmpty()) {
+            return null;
+        }
+        FoodInfo food = bridge.food(stack);
+        if (food == null) {
+            return null;
+        }
+        List<FoodInfo> carried = new ArrayList<>();
+        for (ItemStack s : bridge.inventory()) {
+            if (!s.isEmpty()) {
+                FoodInfo f = bridge.food(s);
+                if (f != null) {
+                    carried.add(f);
+                }
+            }
+        }
+        MealComparator.Result ranking = MealComparator.compare(food, carried);
+        return new FoodTooltipData(food, bridge.player(), ranking.others() > 0 ? ranking : null);
+    }
+
+    /**
+     * Called with the components of a tooltip that is about to be drawn with the graphical block: removes the text lines the
+     * block repeats, then adds the block. Viewers that never reach this keep the text lines.
+     */
+    public static void addGraphic(FoodTooltipData data, List<Either<FormattedText, TooltipComponent>> elements) {
+        elements.removeIf(e -> e.left().filter(t -> t instanceof Component c
+                && DUPLICATE.equals(c.getStyle().getInsertion())).isPresent());
+        elements.add(Either.right(data));
     }
 
     /** Draws the hunger-bar overlays for the current frame. */

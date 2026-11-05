@@ -13,4 +13,9 @@ public interface HudDraw {
 
     /** Draws the item's normal tooltip, including OrangePeel's lines, at a fixed spot. Used by the screenshot tour. */
     void tooltip(net.minecraft.world.item.ItemStack stack, int x, int y);
+
+    /** Draws a line of text with a shadow. */
+    void text(String text, int x, int y, int argb);
+
+    int textWidth(String text);
 }

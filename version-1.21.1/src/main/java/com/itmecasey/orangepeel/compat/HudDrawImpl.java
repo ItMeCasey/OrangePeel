@@ -43,4 +43,14 @@ public final class HudDrawImpl implements HudDraw {
     public void tooltip(net.minecraft.world.item.ItemStack stack, int x, int y) {
         g.renderTooltip(net.minecraft.client.Minecraft.getInstance().font, stack, x, y);
     }
+
+    @Override
+    public void text(String text, int x, int y, int argb) {
+        g.drawString(net.minecraft.client.Minecraft.getInstance().font, text, x, y, argb, true);
+    }
+
+    @Override
+    public int textWidth(String text) {
+        return net.minecraft.client.Minecraft.getInstance().font.width(text);
+    }
 }

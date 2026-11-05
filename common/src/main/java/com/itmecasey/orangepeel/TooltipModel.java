@@ -15,7 +15,14 @@ public final class TooltipModel {
 
     public enum Tone { INFO, HUNGER, SATURATION, GOOD, BEST, WARN, BAD, DIM }
 
-    public record Line(String text, Tone tone) {
+    /**
+     * @param graphic true for lines the drawn tooltip block repeats (hunger and saturation numbers, the text bar); they
+     *                are removed when the block is drawn and stay as the plain-text fallback otherwise
+     */
+    public record Line(String text, Tone tone, boolean graphic) {
+        public Line(String text, Tone tone) {
+            this(text, tone, false);
+        }
     }
 
     private TooltipModel() {
@@ -28,7 +35,7 @@ public final class TooltipModel {
     public static List<Line> build(FoodInfo food, PlayerState player, List<FoodInfo> carried) {
         List<Line> lines = new ArrayList<>();
         lines.add(new Line("Hunger +" + trim(food.nutrition() / 2f) + "  Saturation +" + trim(food.saturation()),
-                Tone.HUNGER));
+                Tone.HUNGER, true));
 
         if (Config.showComparator) {
             MealComparator.Result r = MealComparator.compare(food, carried);
@@ -41,7 +48,7 @@ public final class TooltipModel {
                             + (r.others() == 1 ? " food" : " foods"), Tone.INFO));
                     int filled = Math.round(r.fractionOfBest() * BAR_SEGMENTS);
                     lines.add(new Line(bar(filled) + " " + Math.round(r.fractionOfBest() * 100) + "% of "
-                            + r.bestFood().name() + " (" + trim(r.deltaVsBest()) + ")", Tone.DIM));
+                            + r.bestFood().name() + " (" + trim(r.deltaVsBest()) + ")", Tone.DIM, true));
                 }
             }
         }

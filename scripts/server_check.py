@@ -56,7 +56,7 @@ def check(layer):
     t.join(timeout=5)
     out = "\n".join(log)
     (run / "server_check.log").write_text(out, encoding="utf-8")
-    mod_seen = bool(re.search(r"mod:orangepeel|\(orangepeel\)|Loading mod orangepeel", out))
+    mod_seen = bool(re.search(r"OrangePeel loaded", out))
     errors = [l for l in log if ERROR_WORDS.search(l) or OWN_ERROR.search(l)]
     if not done:
         return f"SERVER FAIL {layer}: server never reported Done (see {run / 'server_check.log'})"

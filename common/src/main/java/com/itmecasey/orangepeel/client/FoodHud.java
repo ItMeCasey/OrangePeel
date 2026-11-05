@@ -13,10 +13,13 @@ public final class FoodHud {
     private FoodHud() {
     }
 
-    /** Pulse between 0.35 and 0.75 of the configured opacity. */
+    /** Preview opacity: pulses between 0.4 and 0.85 (never below 0.35), or stays at 0.6 when steady. */
     static float pulse(long nanos) {
+        if (Config.steadyPreview) {
+            return 0.6f;
+        }
         double t = nanos / 1.0e9;
-        return (float) (0.55 + 0.2 * Math.sin(t * 4.0));
+        return (float) (0.625 + 0.225 * Math.sin(t * 4.0));
     }
 
     public static void render(HudDraw d, PlayerState p, FoodInfo held) {
@@ -38,20 +41,23 @@ public final class FoodHud {
         }
 
         if (Config.showSaturationOverlay && p.saturation() > 0f) {
+            // Golden rails above and below every shank the saturation covers (half a rail for one point).
+            int gold = argb(opacity, 0xFF, 0xC8, 0x2E);
             for (int i = 0; i < 10; i++) {
                 float points = Math.max(0f, Math.min(2f, p.saturation() - i * 2f));
                 if (points <= 0f) {
                     break;
                 }
                 int x = left - i * 8 - 9;
-                int w = Math.round(points / 2f * 9);
-                d.fill(x + 9 - w, top + 9, x + 9, top + 10, argb(opacity, 0xFF, 0x9A, 0x2E));
+                int from = points >= 2f ? x : x + 5;
+                d.fill(from, top - 2, x + 9, top - 1, gold);
+                d.fill(from, top + 10, x + 9, top + 11, gold);
             }
         }
 
         if (held != null && Config.showHungerPreview) {
             int after = FoodMath.foodAfter(p.foodLevel(), held.nutrition());
-            int tint = argb(pulse(System.nanoTime()) * opacity, 0xFF, 0xFF, 0xFF);
+            int tint = argb(pulse(System.nanoTime()) * opacity, 0xFF, 0xF0, 0xB8);
             for (int i = 0; i < 10; i++) {
                 int x = left - i * 8 - 9;
                 int iconStart = i * 2;
@@ -72,7 +78,7 @@ public final class FoodHud {
                 int to = (int) Math.ceil(Math.min(p.maxHealth(), p.health() + gain) / 2f - 0.0001f);
                 int hx = d.width() / 2 - 91 + Config.hudOffsetX;
                 for (int i = from; i < to && i < 10; i++) {
-                    d.sprite("hud/heart/full", hx + i * 8, top - 10, 9, 9, tint);
+                    d.sprite("hud/heart/full", hx + i * 8, top, 9, 9, tint);
                 }
             }
         }

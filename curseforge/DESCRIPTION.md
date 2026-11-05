@@ -15,8 +15,8 @@ Hover a food and OrangePeel ranks it against every other food in your inventory.
 
 ![Hunger bar preview](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_hud.png)
 
-- Restored hunger, shown on the bar before you eat.
-- A saturation strip, and a tooltip line for how long a meal keeps you full.
+- Restored hunger, shown on the bar before you eat, and drawn shanks, saturation and a comparison bar in the food tooltip.
+- Golden rails for the saturation you have, and a tooltip line for how long a meal keeps you full.
 - Health regeneration preview.
 - Every overlay can be turned off, moved, or made more transparent in the config.
 
