@@ -26,8 +26,8 @@ OrangePeel is client side; it also loads on a dedicated server and does nothing 
 ## Tested
 
 Every layer compiles, passes the unit tests, loads on a dedicated server and was seen in a real game client (hunger bar
-overlays and the tooltip). Item viewers were run on NeoForge only: JEI (1.21.1, 26.1.2), REI and EMI (1.21.1) draw the graphical tooltip; released BEI shows
-the text lines only. Other viewer and version cells, Forge viewers and other mods' foods were not run. See
+overlays and the tooltip). Item viewers were run on NeoForge only: JEI (1.21.1, 26.1.2), REI and EMI (1.21.1) draw the graphical tooltip; BEI works from 2026.11.4
+(2026.11.3 and older draw the text only). Other viewer and version cells, Forge viewers and other mods' foods were not run. See
 [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the table and [docs/TESTING.md](docs/TESTING.md) for what the checks do not cover.
 
 ## Known gaps

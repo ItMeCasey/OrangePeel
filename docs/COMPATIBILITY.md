@@ -25,21 +25,16 @@ Upstream builds checked with the CurseForge API on 2026-11-05. Cells say what wa
 | JEI | Drew graphics | Drew graphics | Not tested (typing into the search box did not arrive, so no food was hovered) | Not tested (same) | 1.21.1: not tested; 26.x: no upstream build |
 | REI | Drew graphics | Not tested (the viewer tour failed twice, cause not diagnosed; most likely the tour bug fixed since) | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream) | No usable build: REI 26.3 needs Cloth Config 26.3, which has no build | No upstream build |
 | EMI | Drew graphics | No upstream build | No upstream build | No upstream build | No upstream build |
-| BEI 2026.11.1 and .2 (released) | Text only (reported by Casey; no frame of the food hover) | Text only | Text only | Text only | Builds exist on all four versions; not tested |
-| BEI 2026.11.3 (unreleased, built from the BEI repo) | Drew graphics, and also our text lines (see below) | Not tested | Not tested | Not tested | Not tested |
+| BEI | Works from BEI 2026.11.4; the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |
 | SMWTI | Nothing to show: OrangePeel adds no blocks or entities | | | | |
 | Jade | Nothing to show (no blocks or entities); builds exist on NeoForge only | | | | |
 
 ## Known upstream issues
 
-- **Released BEI draws text only.** BEI 2026.11.3 draws tooltip components. Until it ships, BEI users see the text lines.
-- **BEI 2026.11.3 shows each value twice.** BEI passes a copy of the lines to the gather event and then draws the original
-  list, so the text lines OrangePeel removes for the graphic are still drawn. Fix in BEI (task T-029): draw the lines that
-  survive the gather event.
 - **REI 26.2 crashes** when it renders its menu (`GuiGraphics.withFreshScissorStack`, an access error against NeoForge 26.2);
   this is in REI itself.
 - **REI 26.3** cannot load without Cloth Config 26.3, which does not exist yet.
-- Backing frames in `docs/frames/` exist only for the cells marked above; empty cells were not rerun to fill them.
+- Backing frames in `docs/frames/` exist only for the JEI, REI and EMI cells marked above; BEI was verified by the BEI project, and empty cells were not rerun to fill them.
 
 ## How the viewer check works (development only)
 
