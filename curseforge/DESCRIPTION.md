@@ -28,7 +28,7 @@ Hover a food and OrangePeel ranks it against every other food in your inventory.
 
 The pictures on this page are illustrations drawn for the listing, not game screenshots.
 
-**Tested:** to be filled in at release with exactly what was played in a game client.
+**Tested:** every layer (Forge and NeoForge on 1.21.1, 26.1.2, 26.2 and 26.3) compiles, passes unit tests, loads on a dedicated server and was run in a real game client with the hunger bar overlays and tooltip seen in screenshots. Item viewers (JEI, EMI, REI, BEI) and foods from other mods have not been run yet.
 
 ![FAQ](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_faq.png)
 

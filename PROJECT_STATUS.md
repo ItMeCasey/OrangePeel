@@ -28,11 +28,12 @@ Spend: none
 - [ ] Item viewer check with JEI, EMI and REI loaded (w:3)
 - [x] build.yml and release.yml with dry_run input (w:2)
 - [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
+- [x] Release workflow dry run passed (ids resolved for all four jars) (w:1)
 - [ ] First release tagged and uploaded (w:2)
 
 ## Documentation and branding
 - [x] Icon, banners and section headers drawn in the SMWTI style (w:2)
-- [~] README, CHANGELOG, CurseForge description and listing kit (w:2)
+- [x] README, CHANGELOG, CurseForge description and listing kit, matching the tested state (w:2)
 - [x] Issue templates (w:1)
-- [~] Wiki pages written for itmecasey.com (w:2)
+- [x] Wiki pages written in the site folder, links checked, not committed or deployed (w:2)
 - [ ] Wiki deployed and checked live (w:1)
