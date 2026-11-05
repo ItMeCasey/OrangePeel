@@ -22,7 +22,7 @@ ASSETS = {
     "features": (1920, 1080, 1),
     "tooltip": (1920, 1080, 1),
     "hud": (1920, 1080, 1),
-    **{f"h_{k}": (800, 46, 2) for k in ("features", "comparator", "hud", "compat", "players", "authors", "install", "config", "faq")},
+    **{f"h_{k}": (800, 46, 2) for k in ("features", "comparator", "hud", "compat", "players", "authors", "config", "faq")},
 }
 
 OUT.mkdir(parents=True, exist_ok=True)

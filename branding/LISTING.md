@@ -6,7 +6,7 @@ Everything you need to fill in the CurseForge project form. Files are in `brandi
 
 | Field | CurseForge |
 |---|---|
-| Project ID | (fill in once Casey has created the project) |
+| Project ID | 1784834 |
 | Name | OrangePeel |
 | Slug / URL | `orangepeel` |
 | Mod id | `orangepeel` |

@@ -187,7 +187,7 @@ const TIPS = {
     ["Hunger +2.5  Saturation +6", "hunger"],
     ["Better than 3 of your other 5 foods", "info"],
     ["█████░░░░░ 53% of Steak (-9.5)", "dim"],
-    ["Wastes 3 hunger points if eaten now", "warn"]]),
+    ["Wastes 1.5 shanks of hunger if eaten now", "warn"]]),
   flesh: () => tip("Rotten Flesh", [
     ["Hunger +2  Saturation +0.8", "hunger"],
     ["Better than 0 of your other 5 foods", "info"],
@@ -267,7 +267,7 @@ const ASSETS = {
     r.append(el("div", {class: "tag", style: "font-size:24px"}, "Illustration drawn for this page, not a game screenshot."));
   }],
 };
-for (const [k, label] of Object.entries({features: "Features", comparator: "Meal comparator", hud: "Hunger bar", compat: "Compatibility", players: "For players", authors: "For mod authors", install: "Install", config: "Settings", faq: "FAQ"})) {
+for (const [k, label] of Object.entries({features: "Features", comparator: "Meal comparator", hud: "Hunger bar", compat: "Compatibility", players: "For players", authors: "For mod authors", config: "Settings", faq: "FAQ"})) {
   ASSETS["h_" + k] = [800, 46, (r) => {
     r.style.cssText += "display:flex;align-items:center;gap:14px;padding:0 16px;border-top:2px solid var(--gold)";
     r.append(iconImg(30));

@@ -26,7 +26,7 @@ Spend: none
 - [~] Headless server load check on every layer (w:3)
 - [ ] Client check with screenshots on every layer (w:4)
 - [x] build.yml and release.yml with dry_run input (w:2)
-- [ ] CurseForge project created and its id recorded (w:1)
+- [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
 - [ ] First release tagged and uploaded (w:2)
 
 ## Documentation and branding

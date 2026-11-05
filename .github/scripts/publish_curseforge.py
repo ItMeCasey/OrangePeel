@@ -20,8 +20,8 @@ import uuid
 import zipfile
 from pathlib import Path
 
-# CurseForge project id. 0 until Casey creates the project; a real upload refuses to run while it is 0.
-PROJECT_ID = 0
+# CurseForge project id (created by Casey).
+PROJECT_ID = 1784834
 API = "https://minecraft.curseforge.com/api"
 
 # Minecraft version -> Java version name on CurseForge

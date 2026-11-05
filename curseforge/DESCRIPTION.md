@@ -8,22 +8,22 @@ OrangePeel shows what food does before you eat it. Hold a food and your hunger b
 
 Hover a food and OrangePeel ranks it against every other food in your inventory.
 
-- **Ranked:** "Better than 4 of your 6 foods", with a small bar showing how far it sits from your best one.
-- **Best choice:** the food that suits you right now is marked, so you stop wasting a golden carrot on a half-empty bar.
+- **Ranked:** "Better than 4 of your other 6 foods", with a small bar showing how far it sits from your best one.
+- **Best choice:** your best food overall is flagged, and so is the best pick for your hunger right now, so you stop wasting a big meal on a nearly full bar.
 - **No waste:** if eating would overfill your hunger bar, the wasted points show in orange.
 - **Effects:** names and durations of the effects a food gives.
 
 ![Hunger bar preview](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_hud.png)
 
 - Restored hunger, shown on the bar before you eat.
-- Saturation and exhaustion, so you see how long a meal keeps you full.
+- A saturation strip, and a tooltip line for how long a meal keeps you full.
 - Health regeneration preview.
 - Every overlay can be turned off, moved, or made more transparent in the config.
 
 ![Works with your other mods](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_compat.png)
 
 - Reads food values from the game, so modded foods work without extra support.
-- Tooltip lines show up in item viewers that use the normal tooltip (JEI, EMI, REI and BEI), with a plain-text version of every graphic where the viewer cannot draw icons.
+- The lines are added through the game's normal item tooltip, which item viewers such as JEI, EMI and REI use. Every graphic has a plain-text version.
 - Other mods can add their own tooltip lines through a small API.
 
 The pictures on this page are illustrations drawn for the listing, not game screenshots.
