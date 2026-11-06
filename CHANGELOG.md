@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 2026.11.2
 
-- Checked the tooltip in JEI, REI, EMI and BEI (see docs/COMPATIBILITY.md); BEI draws the graphics from BEI 2026.11.4. The screenshot tour classes are no longer in the release jars.
+- Checked the food tooltip in item viewers on NeoForge. JEI (1.21.1 and 26.1.2), REI and EMI (1.21.1) draw the shanks, saturation and comparison bar; BEI draws them from BEI 2026.11.4 (older BEI shows the text lines only). The text lines remain the fallback everywhere. See docs/COMPATIBILITY.md for every version and the cells not run.
+- The development screenshot tour is no longer part of the release jars.
 
 ## 2026.11.1
 
