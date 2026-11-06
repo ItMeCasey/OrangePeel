@@ -29,7 +29,7 @@ Hover a food and OrangePeel ranks it against every other food in your inventory.
 
 The pictures on this page are illustrations drawn for the listing, not game screenshots.
 
-**Tested:** every layer (Forge and NeoForge on 1.21.1, 26.1.2, 26.2 and 26.3) compiles, passes unit tests, loads on a dedicated server and was run in a real game client with the hunger bar overlays and tooltip seen in screenshots. Item viewers, on NeoForge only: JEI (1.21.1 and 26.1.2), REI and EMI (1.21.1) draw the graphical tooltip; BEI works from 2026.11.4 (2026.11.3 and older draw the text only). JEI 26.2 and 26.3, REI 26.1.2, Forge viewers and foods from other mods have not been run; REI 26.2 crashes in its own code and REI 26.3 has no build that loads.
+**Tested:** every layer (Forge and NeoForge on 1.21.1, 26.1.2, 26.2 and 26.3) compiles, passes unit tests, loads on a dedicated server and was run in a real game client with the hunger bar overlays and tooltip seen in screenshots. Item viewers, on NeoForge (plus JEI on Forge 1.21.1): JEI (1.21.1 and 26.1.2), REI (1.21.1 and 26.1.2) and EMI (1.21.1) draw the graphical tooltip; BEI works from 2026.11.4 (2026.11.3 and older draw the text only). JEI 26.2 and 26.3, the other Forge viewers and foods from other mods have not been run; REI 26.2 crashes in its own code and REI 26.3 has no build that loads.
 
 ![FAQ](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_faq.png)
 
