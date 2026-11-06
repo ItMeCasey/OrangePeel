@@ -1,5 +1,6 @@
 package com.itmecasey.orangepeel.neoforge;
 
+import com.itmecasey.orangepeel.ExhaustionSync;
 import com.itmecasey.orangepeel.OrangePeel;
 import com.itmecasey.orangepeel.client.ClientHooks;
 import com.itmecasey.orangepeel.client.FoodTooltipData;
@@ -8,6 +9,7 @@ import com.itmecasey.orangepeel.compat.BridgeImpl;
 import com.itmecasey.orangepeel.compat.HudDrawImpl;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -26,6 +28,7 @@ final class NeoForgeClientSetup {
         modBus.addListener((RegisterGuiLayersEvent e) -> e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
                 ResourceLocation.fromNamespaceAndPath(OrangePeel.MODID, "food_overlay"),
                 (graphics, delta) -> ClientHooks.onHud(new HudDrawImpl(graphics))));
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> ExhaustionSync.reset());
         NeoForge.EVENT_BUS.addListener((ItemTooltipEvent e) -> ClientHooks.onTooltip(e.getItemStack(), e.getToolTip()));
         modBus.addListener((RegisterClientTooltipComponentFactoriesEvent e) ->
                 e.register(FoodTooltipData.class, FoodTooltipComponent::new));

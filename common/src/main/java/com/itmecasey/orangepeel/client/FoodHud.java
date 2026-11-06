@@ -34,10 +34,12 @@ public final class FoodHud {
         int top = d.height() - 39 + Config.hudOffsetY;
 
         if (Config.showExhaustionUnderlay && p.exhaustion() > 0f) {
+            // A translucent veil over the shanks, from the right edge toward the left (the way the bar empties): its
+            // width is how much of the four exhaustion points that cost one saturation or hunger point have built up.
             float frac = Math.min(1f, p.exhaustion() / FoodMath.EXHAUSTION_STEP);
-            int w = Math.round(frac * 81);
-            // fills from the right edge of the bar toward the left, like the exhaustion filling up
-            d.fill(left - w, top + 10, left, top + 12, argb(0.8f * opacity, 0x2E, 0x2A, 0x46));
+            int w = Math.max(1, Math.round(frac * 81));
+            d.fill(left - w, top, left, top + 9, argb(0.38f * opacity, 0xE6, 0xE6, 0xFF));
+            d.fill(left - w, top, left - w + 1, top + 9, argb(0.9f * opacity, 0xFF, 0xFF, 0xFF));
         }
 
         if (Config.showSaturationOverlay && p.saturation() > 0f) {

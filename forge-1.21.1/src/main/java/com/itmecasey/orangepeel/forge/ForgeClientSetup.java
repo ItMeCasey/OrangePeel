@@ -1,5 +1,6 @@
 package com.itmecasey.orangepeel.forge;
 
+import com.itmecasey.orangepeel.ExhaustionSync;
 import com.itmecasey.orangepeel.client.ClientHooks;
 import com.itmecasey.orangepeel.client.FoodTooltipData;
 import com.itmecasey.orangepeel.compat.FoodTooltipComponent;
@@ -8,6 +9,7 @@ import com.itmecasey.orangepeel.compat.HudDrawImpl;
 import com.itmecasey.orangepeel.OrangePeel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,6 +27,7 @@ final class ForgeClientSetup {
         context.getModEventBus().addListener((AddGuiOverlayLayersEvent e) -> e.getLayeredDraw().add(
                 ResourceLocation.fromNamespaceAndPath(OrangePeel.MODID, "food_overlay"),
                 (graphics, delta) -> ClientHooks.onHud(new HudDrawImpl(graphics))));
+        MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> ExhaustionSync.reset());
         MinecraftForge.EVENT_BUS.addListener((ItemTooltipEvent e) ->
                 ClientHooks.onTooltip(e.getItemStack(), e.getToolTip()));
         context.getModEventBus().addListener((RegisterClientTooltipComponentFactoriesEvent e) ->

@@ -12,6 +12,7 @@ import net.neoforged.fml.loading.FMLPaths;
 public final class NeoForgeOrangePeel {
     public NeoForgeOrangePeel(IEventBus modBus) {
         OrangePeel.init(FMLPaths.CONFIGDIR::get);
+        NeoForgeExhaustionNet.install(modBus);
         if (FMLEnvironment.dist == Dist.CLIENT) {
             NeoForgeClientSetup.install(modBus);
         }

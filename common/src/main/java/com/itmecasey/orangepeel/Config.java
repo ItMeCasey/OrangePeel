@@ -21,6 +21,8 @@ public final class Config {
     public static volatile boolean showHungerPreview = true;
     public static volatile boolean showSaturationOverlay = true;
     public static volatile boolean showExhaustionUnderlay = true;
+    /** Server side: send each player's exhaustion to that player's client (needed for the underlay on a server). */
+    public static volatile boolean sendExhaustion = true;
     public static volatile boolean showHealthPreview = true;
     /** true keeps the hunger preview at a steady opacity instead of pulsing. */
     public static volatile boolean steadyPreview = false;
@@ -71,6 +73,7 @@ public final class Config {
         showHungerPreview = boolOf(p, "showHungerPreview", showHungerPreview);
         showSaturationOverlay = boolOf(p, "showSaturationOverlay", showSaturationOverlay);
         showExhaustionUnderlay = boolOf(p, "showExhaustionUnderlay", showExhaustionUnderlay);
+        sendExhaustion = boolOf(p, "sendExhaustion", sendExhaustion);
         showHealthPreview = boolOf(p, "showHealthPreview", showHealthPreview);
         steadyPreview = boolOf(p, "steadyPreview", steadyPreview);
         showTooltip = boolOf(p, "showTooltip", showTooltip);
@@ -85,6 +88,7 @@ public final class Config {
         p.setProperty("showHungerPreview", Boolean.toString(showHungerPreview));
         p.setProperty("showSaturationOverlay", Boolean.toString(showSaturationOverlay));
         p.setProperty("showExhaustionUnderlay", Boolean.toString(showExhaustionUnderlay));
+        p.setProperty("sendExhaustion", Boolean.toString(sendExhaustion));
         p.setProperty("showHealthPreview", Boolean.toString(showHealthPreview));
         p.setProperty("steadyPreview", Boolean.toString(steadyPreview));
         p.setProperty("showTooltip", Boolean.toString(showTooltip));

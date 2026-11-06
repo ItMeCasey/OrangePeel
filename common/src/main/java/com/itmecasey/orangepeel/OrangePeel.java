@@ -17,5 +17,8 @@ public final class OrangePeel {
     public static void init(Supplier<Path> configFolder) {
         Config.load(configFolder.get().resolve("orangepeel-client.properties"));
         LOGGER.info("OrangePeel loaded");
+        if (System.getenv("ORANGEPEEL_SELFTEST") != null) {
+            SelfTest.run();
+        }
     }
 }

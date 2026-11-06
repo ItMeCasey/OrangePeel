@@ -7,6 +7,7 @@ Starts `gradlew runServer` in the layer with eula accepted and the layer's regis
 server's "Done" line, checks that the log names the mod and has no mod-loading errors, then stops the server. Prints
 `SERVER PASS <layer>` or `SERVER FAIL <layer>: why`. Needs no display.
 """
+import os
 import re
 import subprocess
 import sys
@@ -36,7 +37,7 @@ def check(layer):
         "motd=OrangePeel server check\nmax-tick-time=-1\n")
     log = []
     proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runServer", "--no-daemon", "-q"], cwd=folder,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+                            env=dict(os.environ, ORANGEPEEL_SELFTEST="1"), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
 
     def pump():
         for line in proc.stdout:
@@ -62,6 +63,8 @@ def check(layer):
         return f"SERVER FAIL {layer}: server never reported Done (see {run / 'server_check.log'})"
     if not mod_seen:
         return f"SERVER FAIL {layer}: log never lists the orangepeel mod as loaded"
+    if not re.search(r"SELFTEST DONE failures=0", out):
+        return f"SERVER FAIL {layer}: no 'SELFTEST DONE failures=0' line (see {run / 'server_check.log'})"
     if errors:
         return f"SERVER FAIL {layer}: {errors[0]}"
     return f"SERVER PASS {layer} (port {PORTS[layer]}, {int(time.time() - start)}s)"
