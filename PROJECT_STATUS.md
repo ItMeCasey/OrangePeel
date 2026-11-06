@@ -1,14 +1,14 @@
 # Project Status
 <!-- status-format: 1 -->
-Updated: 2026-11-05
-Summary: Food HUD and tooltip mod with a meal comparator; all eight Forge and NeoForge layers compile, pass unit tests, load on a server and were seen in a real client; first release and item viewer checks are partly done (see docs/COMPATIBILITY.md).
+Updated: 2026-11-06
+Summary: Food HUD and tooltip mod with a meal comparator; 2026.11.1 is released (GitHub, CurseForge file waiting for approval); 2026.11.2 (viewer checks, BEI note) and the exhaustion underlay are next.
 Spend: none
 
 ## Foundation
 - [x] Layout: shared common/ plus per-version version-<mc>/ and eight loader layers (w:3)
 - [x] Gradle builds for NeoForge and Forge on 1.21.1, 26.1.2, 26.2 and 26.3 (w:4)
 - [x] Combined jar per Minecraft version (scripts/combine_jars.py, scripts/build_all.sh) (w:2)
-- [ ] GitHub repository (w:1)
+- [x] GitHub repository ItMeCasey/OrangePeel, public, CI on every push (w:1)
 
 ## Features
 - [x] Food data read from the game, modded foods included (w:3)
@@ -22,7 +22,7 @@ Spend: none
 
 ## Testing and release
 - [x] Unit tests for food math, comparator and tooltip lines (w:3)
-- [~] Unit tests run in CI on every layer (workflow written, not run yet: no remote) (w:1)
+- [x] Unit tests run in CI on every layer (build.yml green on 2026-11-05) (w:1)
 - [x] Headless server load check on every layer (w:3)
 - [x] Client check with screenshots on every layer (w:4)
 - [~] Item viewer check (NeoForge: JEI 1.21.1 and 26.1.2, REI and EMI 1.21.1 draw the graphics; BEI works from 2026.11.4 (verified by the BEI project, accepted by Casey, not rerun here); JEI 26.2/26.3, REI 26.1.2 and Forge JEI not run; see docs/COMPATIBILITY.md) (w:3)
@@ -33,11 +33,13 @@ Spend: none
 - [x] build.yml and release.yml with dry_run input (w:2)
 - [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
 - [x] Release workflow dry run passed (ids resolved for all four jars) (w:1)
-- [ ] First release tagged and uploaded (w:2)
+- [x] First release v2026.11.1 tagged: GitHub pre-release with four jars, CurseForge upload run succeeded (w:2)
+- [ ] CurseForge approval of the 2026.11.1 files (Casey; no file is public yet) (w:1)
 
 ## Documentation and branding
 - [x] Icon, banners and section headers drawn in the SMWTI style (w:2)
 - [x] README, CHANGELOG, CurseForge description and listing kit, matching the tested state (w:2)
 - [x] Issue templates (w:1)
-- [x] Wiki pages written in the site folder, links checked, not committed or deployed (w:2)
-- [ ] Wiki deployed and checked live (w:1)
+- [x] Wiki pages written, links checked (w:2)
+- [x] Wiki deployed, itmecasey.com/wiki/orangepeel answers 200 (w:1)
+- [ ] Wiki updated for 2026.11.2 and deployed (the project manager deploys) (w:1)
