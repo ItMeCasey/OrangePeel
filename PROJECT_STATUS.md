@@ -13,8 +13,8 @@ Spend: none
 ## Features
 - [x] Food data read from the game, modded foods included (w:3)
 - [x] Hunger bar preview, saturation rails, health regen preview, seen on all eight layers (w:4)
-- [x] Exhaustion underlay fed by a server sync (packet, throttle, veil, config switch, unit tests, server self test on all eight layers; seen in a client on NeoForge and Forge 1.21.1, NeoForge 26.1.2, Forge 26.3) (w:3)
-- [ ] Exhaustion underlay seen in a client on the other four layers, and from a client on a dedicated server (w:2)
+- [x] Exhaustion underlay fed by a server sync (packet, throttle, veil, config switch, unit tests, server self test on all eight layers; seen in a client on all eight layers) (w:3)
+- [ ] Exhaustion underlay from a client on a separate dedicated server (w:2)
 - [x] Food tooltip: drawn shanks, saturation, hearts and comparison bar plus text lines, seen on all eight layers (w:4)
 - [x] Meal comparator: rank against inventory, delta bar, best-food flag (w:4)
 - [x] Fullness timer line (w:1)
