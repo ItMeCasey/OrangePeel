@@ -1,7 +1,7 @@
 # Project Status
 <!-- status-format: 1 -->
 Updated: 2026-11-06
-Summary: Food HUD and tooltip mod with a meal comparator; 2026.11.1 is released (GitHub, CurseForge file waiting for approval); 2026.11.2 (viewer checks, BEI note) and the exhaustion underlay are next.
+Summary: Food HUD and tooltip mod with a meal comparator and an exhaustion underlay; 2026.11.3 is released and public on CurseForge for 1.21.1, 26.1.2, 26.2 and 26.3.
 Spend: none
 
 ## Foundation
@@ -35,7 +35,7 @@ Spend: none
 - [x] CurseForge project created, id 1784834 recorded in the upload script (w:1)
 - [x] Release workflow dry run passed (ids resolved for all four jars) (w:1)
 - [x] First release v2026.11.1 tagged: GitHub pre-release with four jars, CurseForge upload run succeeded (w:2)
-- [ ] CurseForge approval of the 2026.11.1 files (Casey; no file is public yet) (w:1)
+- [x] CurseForge approval: the project and the 2026.11.1, 2026.11.2 and 2026.11.3 files are public (checked 2026-11-06) (w:1)
 
 ## Documentation and branding
 - [x] Icon, banners and section headers drawn in the SMWTI style (w:2)
