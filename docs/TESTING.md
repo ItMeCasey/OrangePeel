@@ -26,6 +26,9 @@ Checked on 2026-11-05. "Seen" means a screenshot from a real game client that wa
 - The tooltip is drawn at a fixed spot by the tour (inside the inventory screen on 26.x), not by hovering a slot with a mouse.
 - Item viewers: run on NeoForge only, and not on every version. See [COMPATIBILITY.md](COMPATIBILITY.md) for what each
   viewer drew on each version and why some cells were not run. No viewer was run on Forge.
-- The exhaustion underlay needs a server sync that is not built; it never shows.
+- The exhaustion underlay needs OrangePeel on the server. Its packet was seen reaching the client in singleplayer on NeoForge
+  and Forge 1.21.1, NeoForge 26.1.2 and Forge 26.3 (frames `*_hud_exhaustion_*.png`); the other four layers compile, load on a
+  server and pass the server self test (it reads exhaustion from the game's own food data) but were not run in a client. A
+  client joining a separate dedicated server was not run.
 - Multiplayer: not tested. OrangePeel is client side.
 - Other mods' foods: the code reads the game's own food data, but only vanilla foods were run.

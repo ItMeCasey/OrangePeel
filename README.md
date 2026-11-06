@@ -32,9 +32,9 @@ overlays and the tooltip). Item viewers were run on NeoForge only: JEI (1.21.1, 
 
 ## Known gaps
 
-- **The exhaustion underlay is not active yet.** The game never sends exhaustion to the client, so it needs OrangePeel on the
-  server too, and that sync is not built. Until it is, the exhaustion underlay stays hidden and the health and fullness
-  estimates assume no exhaustion.
+- **The exhaustion underlay needs OrangePeel on the server.** The game never sends exhaustion to the client, so OrangePeel
+  sends it from the server in a small packet (`sendExhaustion` in the config turns that off). Without OrangePeel on the
+  server the underlay stays hidden and the health and fullness estimates assume no exhaustion.
 - The meal comparator ranks by hunger plus saturation. It does not try to guess what you would rather eat.
 - The pictures in the listing are drawings, not game screenshots.
 

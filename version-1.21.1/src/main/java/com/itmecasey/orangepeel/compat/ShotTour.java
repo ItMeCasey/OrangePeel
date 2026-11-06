@@ -190,6 +190,13 @@ public final class ShotTour {
 
         then(2, () -> setHunger(10, 2.0F, 20.0F));
         then(2, () -> selectSlot(0));
+        then(2, () -> setHunger(14, 4.0F, 20.0F));
+        then(2, () -> selectSlot(1));
+        then(2, () -> addExhaustion(1.6F));
+        shoot("hud_exhaustion_low", 24);
+        then(2, () -> addExhaustion(1.7F));
+        shoot("hud_exhaustion_high", 24);
+
         then(2, () -> Minecraft.getInstance().setScreen(new InventoryScreen(player())));
         shoot("inventory_foods", 20);
         then(2, () -> Minecraft.getInstance().setScreen(null));
@@ -215,6 +222,14 @@ public final class ShotTour {
         ClientHooks.tourTooltip = ItemStack.EMPTY;
         if (false) {
             Minecraft.getInstance().setScreen(null);
+        }
+    }
+
+    /** Adds exhaustion on the server; the mod sends it to this client, which draws the underlay. */
+    private static void addExhaustion(float amount) {
+        MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
+        if (server != null) {
+            server.execute(() -> server.getPlayerList().getPlayers().forEach(p -> p.getFoodData().addExhaustion(amount)));
         }
     }
 

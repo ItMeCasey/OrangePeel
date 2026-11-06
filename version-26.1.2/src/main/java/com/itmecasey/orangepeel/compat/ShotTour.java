@@ -142,8 +142,7 @@ public final class ShotTour {
             return;
         }
         then(0, () -> {
-            server("gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamerule announceAdvancements false", "gamerule sendCommandFeedback false",
-                    "time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
+            server("time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
                     "give @p minecraft:cooked_beef 8", "give @p minecraft:bread 12", "give @p minecraft:apple 5",
                     "give @p minecraft:golden_apple 2", "give @p minecraft:rotten_flesh 9",
                     "give @p minecraft:cooked_chicken 4", "give @p minecraft:sweet_berries 20");
@@ -187,6 +186,13 @@ public final class ShotTour {
 
         then(2, () -> setHunger(10, 2.0F, 20.0F));
         then(2, () -> selectSlot(0));
+        then(2, () -> setHunger(14, 4.0F, 20.0F));
+        then(2, () -> selectSlot(1));
+        then(2, () -> addExhaustion(1.6F));
+        shoot("hud_exhaustion_low", 24);
+        then(2, () -> addExhaustion(1.7F));
+        shoot("hud_exhaustion_high", 24);
+
         then(2, () -> Minecraft.getInstance().setScreen(new InventoryScreen(player())));
         shoot("inventory_foods", 20);
         then(2, () -> Minecraft.getInstance().setScreen(null));
@@ -212,6 +218,14 @@ public final class ShotTour {
         ClientHooks.tourTooltip = ItemStack.EMPTY;
         if (true) {
             Minecraft.getInstance().setScreen(null);
+        }
+    }
+
+    /** Adds exhaustion on the server; the mod sends it to this client, which draws the underlay. */
+    private static void addExhaustion(float amount) {
+        MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
+        if (server != null) {
+            server.execute(() -> server.getPlayerList().getPlayers().forEach(p -> p.getFoodData().addExhaustion(amount)));
         }
     }
 
@@ -247,8 +261,7 @@ public final class ShotTour {
     private static void planViewer() {
         String viewer = System.getenv("ORANGEPEEL_VIEWER");
         then(0, () -> {
-            server("gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamerule announceAdvancements false", "gamerule sendCommandFeedback false",
-                    "time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
+            server("time set noon", "weather clear", "kill @e[type=!player]", "clear @p",
                     "give @p minecraft:cooked_beef 8", "give @p minecraft:bread 12", "give @p minecraft:apple 5",
                     "give @p minecraft:golden_apple 2");
             player().getAbilities().flying = false;

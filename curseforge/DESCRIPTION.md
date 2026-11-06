@@ -18,6 +18,7 @@ Hover a food and OrangePeel ranks it against every other food in your inventory.
 - Restored hunger, shown on the bar before you eat, and drawn shanks, saturation and a comparison bar in the food tooltip.
 - Golden rails for the saturation you have, and a tooltip line for how long a meal keeps you full.
 - Health regeneration preview.
+- The exhaustion underlay shows how close the next point of saturation or hunger is to dropping, as a veil over the shanks.
 - Every overlay can be turned off, moved, or made more transparent in the config.
 
 ![Works with your other mods](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_compat.png)
@@ -32,7 +33,7 @@ The pictures on this page are illustrations drawn for the listing, not game scre
 
 ![FAQ](https://raw.githubusercontent.com/ItMeCasey/OrangePeel/main/branding/banners/h_faq.png)
 
-**Does it need to be on the server?** No. The overlay and tooltip run on your client.
+**Does it need to be on the server?** No, except for the exhaustion underlay: the game does not send exhaustion to your client, so that one needs OrangePeel on the server too (singleplayer works on its own). Everything else runs on your client.
 
 **Does it change how food works?** No. It only shows information.
 

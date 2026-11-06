@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Exhaustion underlay: the server sends each player's exhaustion to that player's client (a one-float packet, optional on both sides, at most every 5 ticks and only when it changed), and the hunger bar draws it as a translucent veil over the shanks. The health regeneration and fullness estimates now use it. New config switch `sendExhaustion` (server side). The server self test now logs `SELFTEST DONE failures=0` and checks that exhaustion can be read.
+
 ## 2026.11.2
 
 - Checked the food tooltip in item viewers on NeoForge. JEI (1.21.1 and 26.1.2), REI and EMI (1.21.1) draw the shanks, saturation and comparison bar; BEI draws them from BEI 2026.11.4 (older BEI shows the text lines only). The text lines remain the fallback everywhere. See docs/COMPATIBILITY.md for every version and the cells not run.
