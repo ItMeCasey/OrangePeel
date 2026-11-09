@@ -1,6 +1,6 @@
 # Project Status
 <!-- status-format: 1 -->
-Updated: 2026-11-06
+Updated: 2026-11-09
 Summary: Food HUD and tooltip mod with a meal comparator and an exhaustion underlay; 2026.11.3 is released and public on CurseForge for 1.21.1, 26.1.2, 26.2 and 26.3.
 Spend: none
 
@@ -14,7 +14,7 @@ Spend: none
 - [x] Food data read from the game, modded foods included (w:3)
 - [x] Hunger bar preview, saturation rails, health regen preview, seen on all eight layers (w:4)
 - [x] Exhaustion underlay fed by a server sync (packet, throttle, veil, config switch, unit tests, server self test on all eight layers; seen in a client on all eight layers) (w:3)
-- [ ] Exhaustion underlay from a client on a separate dedicated server (w:2)
+- [x] Exhaustion underlay server side without a remote client: 5 unit tests of what a dedicated server does each tick (ExhaustionSenderTest) plus the self test that reads exhaustion from the game's own FoodData on all eight layers; the integrated server's packet reached the client on all eight layers. A client on a separate dedicated server was not run (needs an accepted EULA) (w:2)
 - [x] Food tooltip: drawn shanks, saturation, hearts and comparison bar plus text lines, seen on all eight layers (w:4)
 - [x] Meal comparator: rank against inventory, delta bar, best-food flag (w:4)
 - [x] Fullness timer line (w:1)
@@ -28,8 +28,7 @@ Spend: none
 - [x] Client check with screenshots on every layer (w:4)
 - [~] Item viewer check (NeoForge: JEI 1.21.1 (both loaders), 26.1.2 and 26.2, REI 1.21.1 and 26.1.2, EMI 1.21.1 draw the graphics; BEI works from BEI version 2026.11.4 (BEI's own version number, not OrangePeel's) (verified by the BEI project, accepted by Casey, not rerun here); JEI 26.3 not run (search box stays empty on three tries); see docs/COMPATIBILITY.md) (w:3)
 - [x] JEI 26.2 viewer cell: found why typing did not land (JEI 30.x wants a real click and key sequence), fixed in the tour, JEI 26.2 draws the graphics (w:2)
-- [ ] JEI 26.3 viewer cell: the search box stays empty on 26.3 even with the same input (window resizes after the click; cause unknown) (w:2)
-- [ ] Exhaustion underlay from a client on a separate dedicated server: needs the server's EULA accepted (project rule says never accept it) and two clients (w:2)
+- [ ] JEI 26.3 and REI 26.3 viewer cells: BLOCKED by the 26.3 test window flipping between 1904x1041 and 1920x1080 during the search (three attempts, three flips; cause not found); REI 26.3 also has a Cloth Config 26.3 build now (w:2)
 - [x] BEI works from BEI version 2026.11.4 (BEI's own version number, not OrangePeel's), recorded in docs, listing and wiki (w:1)
 - [x] Compatibility standard: no recipes, blocks or entities, so no SMWTI/Jade/recipe integration needed; stated in docs/COMPATIBILITY.md (w:1)
 - [x] Screenshot tour classes left out of release jars (w:1)

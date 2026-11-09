@@ -265,6 +265,76 @@ public final class ShotTour {
         return new double[] {x, y};
     }
 
+    private static int lastWidth;
+    private static int lastHeight;
+    private static int stableChecks;
+    private static int totalChecks;
+
+    /**
+     * The window can change size a few seconds after the world loads (seen on 26.3: 1904x1041 became 1920x1080), and a
+     * resize rebuilds the open screen, which drops a search box's focus. This holds the tour until the size has been the
+     * same for six checks in a row (60 ticks), or 60 checks have passed.
+     */
+    private static void awaitStableWindow() {
+        then(2, new Runnable() {
+            @Override
+            public void run() {
+                Minecraft minecraft = Minecraft.getInstance();
+                int w = minecraft.getWindow().getWidth();
+                int h = minecraft.getWindow().getHeight();
+                stableChecks = (w == lastWidth && h == lastHeight) ? stableChecks + 1 : 0;
+                lastWidth = w;
+                lastHeight = h;
+                if (stableChecks < 6 && ++totalChecks < 60) {
+                    STEPS.addFirst(new Step(10, this));
+                } else {
+                    OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS window {}x{} after {} checks", w, h, totalChecks);
+                }
+            }
+        });
+    }
+
+    private static int clickWidth;
+    private static int clickHeight;
+
+    /**
+     * Click the viewer's search box and type into it. Points are worked out when the step runs (the window can change
+     * size at any time on 26.3, which rebuilds the screen and drops the box's focus), and if the size changed while
+     * typing, the whole sequence is run again, up to three times.
+     */
+    private static void searchAttempt(String click, String type, int attempt) {
+        java.util.List<Step> sequence = new java.util.ArrayList<>();
+        sequence.add(new Step(2, () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            clickWidth = minecraft.getWindow().getWidth();
+            clickHeight = minecraft.getWindow().getHeight();
+            double[] at = xy(click);
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS click at {},{} window {}x{} attempt {}", at[0], at[1], clickWidth,
+                    clickHeight, attempt);
+            UiInput.press(at[0], at[1]);
+        }));
+        sequence.add(new Step(4, () -> {
+            double[] at = xy(click);
+            UiInput.release(at[0], at[1]);
+        }));
+        if (type != null) {
+            sequence.add(new Step(20, UiInput::clear));
+            sequence.add(new Step(10, () -> UiInput.type(type)));
+        }
+        sequence.add(new Step(30, () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            if ((minecraft.getWindow().getWidth() != clickWidth || minecraft.getWindow().getHeight() != clickHeight)
+                    && attempt < 3) {
+                OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS window changed to {}x{}, searching again",
+                        minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
+                searchAttempt(click, type, attempt + 1);
+            }
+        }));
+        for (int i = sequence.size() - 1; i >= 0; i--) {
+            STEPS.addFirst(sequence.get(i));
+        }
+    }
+
     /**
      * The item viewer check: opens the inventory with the viewer loaded, shoots it, optionally clicks the viewer's search
      * box and types a food name (ORANGEPEEL_CLICK "x,y" and ORANGEPEEL_TYPE), then hovers each point in
@@ -280,30 +350,31 @@ public final class ShotTour {
         });
         then(10, () -> setHunger(8, 3.0F, 12.0F));
         then(2, () -> { Minecraft.getInstance().gui.setScreen(new InventoryScreen(player())); });
+        awaitStableWindow();
+        // On 26.3 the first mouse event makes the window grow to the monitor size and rebuilds the screen, which drops a search
+        // box's focus. A click in an empty corner takes that hit first; then the window is allowed to settle again.
+        then(2, () -> UiInput.press(50, 50));
+        then(4, () -> UiInput.release(50, 50));
+        then(20, () -> {
+            stableChecks = 0;
+            totalChecks = 0;
+        });
+        awaitStableWindow();
         shoot("viewer_" + viewer + "_screen", 80);
         String click = env("ORANGEPEEL_CLICK");
         if (click != null) {
-            double[] at = xy(click);
-            then(2, () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS click at {},{} window {}x{}", at[0], at[1],
-                        minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
-                UiInput.press(at[0], at[1]);
-            });
-            then(4, () -> UiInput.release(at[0], at[1]));
             String type = env("ORANGEPEEL_TYPE");
-            if (type != null) {
-                then(20, UiInput::clear);
-                then(10, () -> UiInput.type(type));
-            }
+            then(2, () -> searchAttempt(click, type, 1));
             shoot("viewer_" + viewer + "_search", 40);
         }
         String hover = env("ORANGEPEEL_HOVER");
         if (hover != null) {
             int i = 0;
             for (String point : hover.split(";")) {
-                double[] p = xy(point);
-                then(2, () -> UiInput.move(p[0], p[1]));
+                then(2, () -> {
+                    double[] p = xy(point);
+                    UiInput.move(p[0], p[1]);
+                });
                 shoot("viewer_" + viewer + "_hover" + (i++), 30);
             }
         }

@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LAUNCH = r"C:\Users\casey\.claude\tools\launch-isolated.ps1"
 OWNS = r"C:\Users\casey\.claude\tools\who-owns-minecraft.ps1"
 SIZE = "1904x1041"
-TIMEOUT = 600
+TIMEOUT = 180
 OPTIONS = (
     "soundCategory_master:0.0\nmusic:0.0\npauseOnLostFocus:false\nonboardAccessibility:false\n"
     "skipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nfullscreen:false\nguiScale:3\nlang:en_us\n"
@@ -45,8 +45,10 @@ def tour(layer, viewer=None, deps=""):
     start = time.time()
     # The client runs on the hidden MCTest desktop (launch-isolated.ps1), so it cannot touch Casey's desktop, focus or cursor.
     command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra)
-    subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WorkDir", str(folder), "-Command", command],
-                   env=env, capture_output=True)
+    started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WorkDir", str(folder), "-Command",
+                              command], env=env, capture_output=True, text=True)
+    print((started.stdout + started.stderr).strip()[-600:], flush=True)
+    start = time.time()  # the launcher may have queued for the single client slot; the time limit starts when the game does
     log = []
     timed_out = False
     while True:
@@ -65,7 +67,9 @@ def tour(layer, viewer=None, deps=""):
         time.sleep(2)
     else:
         timed_out = True
-    subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Kill"], capture_output=True)
+    if timed_out:
+        # Only when this run hung: -Kill stops every run on the shared hidden desktop, so never as a routine step.
+        subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Kill"], capture_output=True)
     log = text.splitlines() if "text" in dir() else []
     (run / "client_tour.log").write_text("\n".join(log), encoding="utf-8")
     names = sorted(p.name for p in shots.glob("*.png")) if shots.exists() else []

@@ -11,7 +11,6 @@ import net.minecraft.world.food.FoodData;
  * player. A client that gets nothing simply keeps the underlay hidden.
  */
 public final class ServerExhaustion {
-    private static final ExhaustionThrottle THROTTLE = new ExhaustionThrottle();
     private static Field field;
     private static boolean looked;
 
@@ -46,13 +45,13 @@ public final class ServerExhaustion {
             return;
         }
         float value = read(food);
-        if (value >= 0f && THROTTLE.shouldSend(player, value)) {
-            send.accept(value);
+        if (value >= 0f) {
+            ExhaustionSender.tick(player, value, send);
         }
     }
 
     /** A player left: forget them so their next join sends the value again. */
     public static void onPlayerLeft(UUID player) {
-        THROTTLE.forget(player);
+        ExhaustionSender.forget(player);
     }
 }
