@@ -6,7 +6,7 @@
 
 ## 2026.11.2
 
-- Checked the food tooltip in item viewers on NeoForge. JEI (1.21.1 and 26.1.2), REI and EMI (1.21.1) draw the shanks, saturation and comparison bar; BEI draws them from BEI 2026.11.4 (older BEI shows the text lines only). The text lines remain the fallback everywhere. See docs/COMPATIBILITY.md for every version and the cells not run.
+- Checked the food tooltip in item viewers on NeoForge. JEI (1.21.1 and 26.1.2), REI and EMI (1.21.1) draw the shanks, saturation and comparison bar; BEI draws them from BEI version 2026.11.4 or newer (BEI's own number, not OrangePeel's) (older BEI shows the text lines only). The text lines remain the fallback everywhere. See docs/COMPATIBILITY.md for every version and the cells not run.
 - The development screenshot tour is no longer part of the release jars.
 
 ## 2026.11.1

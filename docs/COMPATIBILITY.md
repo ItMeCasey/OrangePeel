@@ -25,7 +25,7 @@ Upstream builds checked with the CurseForge API on 2026-11-05. Cells say what wa
 | JEI | Drew graphics | Drew graphics | Not tested (typing into JEI's search box did not take on two tries, so no food was hovered; the 26.2 frames in `docs/frames` show a non-food and are not evidence) | Not tested (same; one try) | 1.21.1: drew graphics; 26.x: no upstream build |
 | REI | Drew graphics | Drew graphics (after the tour fix) | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream) | No usable build: REI 26.3 needs Cloth Config 26.3, which has no build | No upstream build |
 | EMI | Drew graphics | No upstream build | No upstream build | No upstream build | No upstream build |
-| BEI | Works from BEI 2026.11.4; the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |
+| BEI | Works from BEI 2026.11.4 or newer (BEI's own version number); the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |
 | SMWTI | Nothing to show: OrangePeel adds no blocks or entities | | | | |
 | Jade | Nothing to show (no blocks or entities); builds exist on NeoForge only | | | | |
 
