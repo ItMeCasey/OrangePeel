@@ -21,6 +21,9 @@ Checked on 2026-11-05. "Seen" means a screenshot from a real game client that wa
   health, selects foods in the hotbar and saves screenshots. It checks the hunger bar preview, saturation rails, regeneration
   hearts and the drawn tooltip. Cropped, zoomed proof sheets for each layer are in `docs/frames`.
 
+The tour starts the game through `launch-isolated.ps1` on a hidden Windows desktop, so it cannot touch the desktop, focus or
+cursor of the person using the PC. `scripts/client_tour.py --viewer <name> --deps <coordinates> <layer>` runs the item viewer check.
+
 ## What the client tour does not cover
 
 - The tooltip is drawn at a fixed spot by the tour (inside the inventory screen on 26.x), not by hovering a slot with a mouse.

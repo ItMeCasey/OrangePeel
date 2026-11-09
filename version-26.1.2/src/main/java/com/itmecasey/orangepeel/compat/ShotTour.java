@@ -248,9 +248,22 @@ public final class ShotTour {
         return value == null || value.isBlank() ? null : value.trim();
     }
 
+    /**
+     * "x,y" in pixels of a 1904x1041 window. A trailing r on x or b on y means the point hangs on the right or bottom
+     * edge, so it moves with the window when the window is another size ("1610r,992b").
+     */
     private static double[] xy(String text) {
         String[] parts = text.split(",");
-        return new double[] {Double.parseDouble(parts[0].trim()), Double.parseDouble(parts[1].trim())};
+        double x = Double.parseDouble(parts[0].trim().replace("r", ""));
+        double y = Double.parseDouble(parts[1].trim().replace("b", ""));
+        Minecraft minecraft = Minecraft.getInstance();
+        if (parts[0].contains("r")) {
+            x += minecraft.getWindow().getWidth() - 1904;
+        }
+        if (parts[1].contains("b")) {
+            y += minecraft.getWindow().getHeight() - 1041;
+        }
+        return new double[] {x, y};
     }
 
     /**
@@ -271,10 +284,14 @@ public final class ShotTour {
         shoot("viewer_" + viewer + "_screen", 80);
         String click = env("ORANGEPEEL_CLICK");
         if (click != null) {
+            double[] at = xy(click);
             then(2, () -> {
-                double[] p = xy(click);
-                UiInput.click(p[0], p[1]);
+                Minecraft minecraft = Minecraft.getInstance();
+                OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS click at {},{} window {}x{}", at[0], at[1],
+                        minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
+                UiInput.press(at[0], at[1]);
             });
+            then(4, () -> UiInput.release(at[0], at[1]));
             String type = env("ORANGEPEEL_TYPE");
             if (type != null) {
                 then(20, UiInput::clear);

@@ -22,7 +22,7 @@ Upstream builds checked with the CurseForge API on 2026-11-05. Cells say what wa
 
 | Viewer | NeoForge 1.21.1 | NeoForge 26.1.2 | NeoForge 26.2 | NeoForge 26.3 | Forge |
 |---|---|---|---|---|---|
-| JEI | Drew graphics | Drew graphics | Not tested (typing into JEI's search box did not take on two tries, so no food was hovered; the 26.2 frames in `docs/frames` show a non-food and are not evidence) | Not tested (same; one try) | 1.21.1: drew graphics; 26.x: no upstream build |
+| JEI | Drew graphics | Drew graphics | Drew graphics (JEI 30.x only takes typed text after a real click and key presses, which the tour now sends) | Not tested: the search box stayed empty on three tries even with the same input; the window changed size from 1904x1041 to 1920x1080 right after the click on 26.3, cause unknown | 1.21.1: drew graphics; 26.x: no upstream build |
 | REI | Drew graphics | Drew graphics (after the tour fix) | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream) | No usable build: REI 26.3 needs Cloth Config 26.3, which has no build | No upstream build |
 | EMI | Drew graphics | No upstream build | No upstream build | No upstream build | No upstream build |
 | BEI | Works from BEI 2026.11.4 or newer (BEI's own version number); the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |

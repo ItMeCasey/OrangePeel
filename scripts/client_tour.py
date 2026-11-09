@@ -17,7 +17,9 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PLACE = r"C:\Users\casey\.claude\tools\place-window.ps1"
+LAUNCH = r"C:\Users\casey\.claude\tools\launch-isolated.ps1"
+OWNS = r"C:\Users\casey\.claude\tools\who-owns-minecraft.ps1"
+SIZE = "1904x1041"
 TIMEOUT = 600
 OPTIONS = (
     "soundCategory_master:0.0\nmusic:0.0\npauseOnLostFocus:false\nonboardAccessibility:false\n"
@@ -38,30 +40,33 @@ def tour(layer, viewer=None, deps=""):
     if viewer:
         env["ORANGEPEEL_VIEWER"] = viewer
         extra = [f"-Pviewers={deps}"] if deps else []
-    log = []
-    proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runClient", "--no-daemon", "-q", *extra], cwd=folder,
-                            env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
-
-    def pump():
-        for line in proc.stdout:
-            log.append(line.rstrip())
-
-    threading.Thread(target=pump, daemon=True).start()
-
-    def place():
-        # The window title starts with "Minecraft"; this waits up to two minutes for it and moves it to DISPLAY6.
-        # Only Java windows count: other windows (a browser tab about Minecraft) must never be moved.
-        subprocess.run(["powershell", "-NoProfile", "-File", PLACE, "-ProcessName", "java*", "-Match", "Minecraft",
-                        "-Wait", "180"],
-                       capture_output=True)
-
-    threading.Thread(target=place, daemon=True).start()
+    env["ORANGEPEEL_SIZE"] = SIZE
+    latest = run / "logs" / "latest.log"
     start = time.time()
-    while proc.poll() is None and time.time() - start < TIMEOUT:
+    # The client runs on the hidden MCTest desktop (launch-isolated.ps1), so it cannot touch Casey's desktop, focus or cursor.
+    command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra)
+    subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WorkDir", str(folder), "-Command", command],
+                   env=env, capture_output=True)
+    log = []
+    timed_out = False
+    while True:
+        time.sleep(3)
+        text = latest.read_text(encoding="utf-8", errors="replace") if latest.exists() and latest.stat().st_mtime >= start else ""
+        if "ORANGEPEEL-SHOTS DONE" in text or "ORANGEPEEL-SHOTS FAILED" in text or "Crash report saved" in text:
+            break
+        if time.time() - start > TIMEOUT:
+            timed_out = True
+            break
+    # The game quits by itself after DONE; give it 30 s, then stop the run so no client is left behind.
+    for _ in range(15):
+        owned = subprocess.run(["powershell", "-NoProfile", "-File", OWNS], capture_output=True, text=True).stdout
+        if str(folder) not in owned:
+            break
         time.sleep(2)
-    timed_out = proc.poll() is None
-    if timed_out:
-        subprocess.run(["taskkill", "/T", "/F", "/PID", str(proc.pid)], capture_output=True)
+    else:
+        timed_out = True
+    subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Kill"], capture_output=True)
+    log = text.splitlines() if "text" in dir() else []
     (run / "client_tour.log").write_text("\n".join(log), encoding="utf-8")
     names = sorted(p.name for p in shots.glob("*.png")) if shots.exists() else []
     done = any("ORANGEPEEL-SHOTS DONE" in line for line in log)

@@ -84,13 +84,31 @@ final class UiInput {
         }
     }
 
-    static void click(double x, double y) {
+    private static String buttonMethod(Object mouse) {
+        return find(mouse.getClass(), "onPress") != null ? "onPress" : "onButton";
+    }
+
+    private static void button(double x, double y, boolean down) {
         move(x, y);
         Object mouse = Minecraft.getInstance().mouseHandler;
-        String name = find(mouse.getClass(), "onPress") != null ? "onPress" : "onButton";
+        String name = buttonMethod(mouse);
         boolean legacy = find(mouse.getClass(), name).getParameterCount() == 4;
-        call(mouse, name, legacy ? new int[] {0, 1, 0} : new int[] {1}, 0);
-        call(mouse, name, legacy ? new int[] {0, 0, 0} : new int[] {0}, 0);
+        int action = down ? 1 : 0;
+        call(mouse, name, legacy ? new int[] {0, action, 0} : new int[] {action}, 0);
+    }
+
+    /** The mouse button goes down here. Release it a few ticks later with {@link #release}, like a real click. */
+    static void press(double x, double y) {
+        button(x, y, true);
+    }
+
+    static void release(double x, double y) {
+        button(x, y, false);
+    }
+
+    static void click(double x, double y) {
+        press(x, y);
+        release(x, y);
     }
 
     private static void key(Object keyboard, int key) {
@@ -108,9 +126,17 @@ final class UiInput {
         }
     }
 
+    /** Types like a keyboard does: for each character a key press, the character, and the key release. */
     static void type(String text) {
         Object keyboard = Minecraft.getInstance().keyboardHandler;
         boolean legacy = find(keyboard.getClass(), "charTyped").getParameterCount() == 3;
-        text.codePoints().forEach(cp -> call(keyboard, "charTyped", legacy ? new int[] {cp, 0} : new int[] {0}, cp));
+        text.codePoints().forEach(cp -> {
+            int key = cp == ' ' ? 32 : Character.toUpperCase(cp);
+            call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
+                    ? new int[] {key, 0, 1, 0} : new int[] {1}, key);
+            call(keyboard, "charTyped", legacy ? new int[] {cp, 0} : new int[] {0}, cp);
+            call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
+                    ? new int[] {key, 0, 0, 0} : new int[] {0}, key);
+        });
     }
 }

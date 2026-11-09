@@ -34,6 +34,15 @@ neoForge {
         }
         client {
             client()
+            // Dev only: the viewer check needs a fixed window size on its hidden desktop (ORANGEPEEL_SIZE=1904x1041).
+            def size = System.getenv('ORANGEPEEL_SIZE')
+            if (size) {
+                def parts = size.split('x')
+                programArgument '--width'
+                programArgument parts[0]
+                programArgument '--height'
+                programArgument parts[1]
+            }
         }
         server {
             server()
