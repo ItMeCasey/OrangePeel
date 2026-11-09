@@ -3,9 +3,12 @@
 Usage: python scripts/server_check.py <layer> [<layer> ...]      e.g. neoforge-1.21.1 forge-26.2
        python scripts/server_check.py all
 
-Starts `gradlew runServer` in the layer with eula accepted and the layer's registered test port (8950-8957), waits for the
+Starts `gradlew runServer` in the layer on the layer's registered test port (8950-8957), waits for the
 server's "Done" line, checks that the log names the mod and has no mod-loading errors, then stops the server. Prints
 `SERVER PASS <layer>` or `SERVER FAIL <layer>: why`. Needs no display.
+
+The script never accepts the Minecraft EULA. A layer's run/eula.txt must already say eula=true, written by the person who
+accepted it; without that the layer prints `SERVER SKIP <layer>` and nothing is started.
 """
 import os
 import re
