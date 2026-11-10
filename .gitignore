@@ -3,6 +3,8 @@
 build/
 out/
 run/
+run-server/
+eula.txt
 *.class
 *.log
 

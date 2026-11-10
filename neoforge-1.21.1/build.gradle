@@ -47,6 +47,11 @@ neoForge {
         server {
             server()
             programArgument '--nogui'
+            // Dev only: the dedicated-server check runs the server in its own folder so it does not share logs with the client.
+            def serverDir = System.getenv('ORANGEPEEL_SERVER_DIR')
+            if (serverDir) {
+                gameDirectory = layout.projectDirectory.dir(serverDir)
+            }
         }
     }
 

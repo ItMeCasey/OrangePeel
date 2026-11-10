@@ -6,6 +6,7 @@ package com.itmecasey.orangepeel;
  */
 public final class ExhaustionSync {
     private static volatile float value;
+    private static volatile boolean received;
 
     private ExhaustionSync() {
     }
@@ -16,10 +17,15 @@ public final class ExhaustionSync {
 
     public static void set(float exhaustion) {
         value = exhaustion;
+        if (!received) {
+            received = true;
+            OrangePeel.LOGGER.info("OrangePeel: received the first exhaustion update from the server ({})", exhaustion);
+        }
     }
 
     /** Leaving a world: the next server may not send exhaustion, so show none. */
     public static void reset() {
         value = 0f;
+        received = false;
     }
 }

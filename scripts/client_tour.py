@@ -44,7 +44,7 @@ def tour(layer, viewer=None, deps=""):
     latest = run / "logs" / "latest.log"
     start = time.time()
     # The client runs on the hidden MCTest desktop (launch-isolated.ps1), so it cannot touch Casey's desktop, focus or cursor.
-    command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra)
+    command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra) + " > run\\launch.out 2>&1"
     started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WorkDir", str(folder), "-Command",
                               command], env=env, capture_output=True, text=True)
     print((started.stdout + started.stderr).strip()[-600:], flush=True)

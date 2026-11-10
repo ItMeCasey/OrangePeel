@@ -28,6 +28,7 @@ Spend: none
 - [x] Client check with screenshots on every layer (w:4)
 - [~] Item viewer check (NeoForge: JEI 1.21.1 (both loaders), 26.1.2 and 26.2, REI 1.21.1 and 26.1.2, EMI 1.21.1 draw the graphics; BEI works from BEI version 2026.11.4 (BEI's own version number, not OrangePeel's) (verified by the BEI project, accepted by Casey, not rerun here); JEI 26.3 not run (search box stays empty on three tries); see docs/COMPATIBILITY.md) (w:3)
 - [x] JEI 26.2 viewer cell: found why typing did not land (JEI 30.x wants a real click and key sequence), fixed in the tour, JEI 26.2 draws the graphics (w:2)
+- [ ] Exhaustion underlay from a client on a separate dedicated server: BLOCKED by the shared client slot (scripts/dedicated_check.py is ready; Casey accepted the EULA for this test server on 2026-11-09; the server starts and loads OrangePeel, but the launcher waited 20 minutes for a free slot and gave up; one earlier launch started a client that never wrote a log) (w:2)
 - [ ] JEI 26.3 and REI 26.3 viewer cells: BLOCKED by the 26.3 test window flipping between 1904x1041 and 1920x1080 during the search (three attempts, three flips; cause not found); REI 26.3 also has a Cloth Config 26.3 build now (w:2)
 - [x] BEI works from BEI version 2026.11.4 (BEI's own version number, not OrangePeel's), recorded in docs, listing and wiki (w:1)
 - [x] Compatibility standard: no recipes, blocks or entities, so no SMWTI/Jade/recipe integration needed; stated in docs/COMPATIBILITY.md (w:1)

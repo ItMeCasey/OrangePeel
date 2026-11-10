@@ -13,6 +13,9 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -86,6 +89,15 @@ public final class ShotTour {
         pauseOnLostFocus = minecraft.options.pauseOnLostFocus;
         minecraft.options.pauseOnLostFocus = false;
 
+        String join = System.getenv("ORANGEPEEL_JOIN");
+        if (join != null) {
+            stage = Stage.LOADING_WORLD;
+            idle = 0;
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS joining {}", join);
+            ConnectScreen.startConnecting(new TitleScreen(), minecraft, ServerAddress.parseString(join),
+                    new ServerData("OrangePeel test", join, ServerData.Type.OTHER), false, null);
+            return;
+        }
         LevelStorageSource source = minecraft.getLevelSource();
         if (source.levelExists(WORLD)) {
             try (LevelStorageSource.LevelStorageAccess access = source.createAccess(WORLD)) {
@@ -105,9 +117,19 @@ public final class ShotTour {
     }
 
     /** Waits for the player to stand in the world, then plans the tour. */
+    private static int joinWait;
+
     private static void waitForWorld(Minecraft minecraft) {
+        String join = System.getenv("ORANGEPEEL_JOIN");
+        if (join != null && minecraft.level == null && minecraft.screen != null
+                && !(minecraft.screen instanceof ConnectScreen) && ++joinWait > 200) {
+            joinWait = 0;
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS joining {} again", join);
+            ConnectScreen.startConnecting(new TitleScreen(), minecraft, ServerAddress.parseString(join),
+                    new ServerData("OrangePeel test", join, ServerData.Type.OTHER), false, null);
+        }
         if (minecraft.level == null || minecraft.player == null || minecraft.screen != null
-                || minecraft.getSingleplayerServer() == null || ++idle < 40 || (System.getenv("ORANGEPEEL_VIEWER") != null && minecraft.getWindow().getWidth() < 1800 && idle < 1500)) {
+                || (minecraft.getSingleplayerServer() == null && System.getenv("ORANGEPEEL_JOIN") == null) || ++idle < 40 || (System.getenv("ORANGEPEEL_VIEWER") != null && minecraft.getWindow().getWidth() < 1800 && idle < 1500)) {
             return;
         }
         ground = minecraft.level.getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0);
@@ -142,6 +164,10 @@ public final class ShotTour {
     private static void planTour() {
         if (System.getenv("ORANGEPEEL_VIEWER") != null) {
             planViewer();
+            return;
+        }
+        if (System.getenv("ORANGEPEEL_JOIN") != null) {
+            planJoin();
             return;
         }
         then(0, () -> {
@@ -246,6 +272,30 @@ public final class ShotTour {
         }
     }
 
+
+
+    /** Development only: joins the dedicated server in ORANGEPEEL_JOIN ("host:port") and shoots the exhaustion underlay. */
+    private static void planJoin() {
+        then(0, () -> {
+            player().getAbilities().flying = false;
+            Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+        });
+        shoot("join_before", SETTLE);
+        then(2, () -> {
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS asking the server for hunger");
+            player().connection.sendCommand("effect give @s minecraft:hunger 20 12 true");
+        });
+        shoot("join_exhaustion_a", 40);
+        shoot("join_exhaustion_b", 30);
+        shoot("join_exhaustion_c", 30);
+        then(10, () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            minecraft.options.pauseOnLostFocus = pauseOnLostFocus;
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS DONE");
+            stage = Stage.DONE;
+            minecraft.stop();
+        });
+    }
 
     private static String env(String key) {
         String value = System.getenv(key);
