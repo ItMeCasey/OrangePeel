@@ -52,12 +52,12 @@ def main():
     # The client goes first (it may queue for the single client slot for a while); the server starts as soon as the client's
     # Gradle run has begun, so no server sits idle during the wait. The client's tour retries the join until the server is up.
     results = []
-    os.environ["ORANGEPEEL_JOIN"] = f"localhost:{PORT}"
-    launch_out = folder / "run" / "launch.out"
+    os.environ["ORANGEPEEL_JOIN"] = f"127.0.0.1:{PORT}"
+    started_log = folder / "run" / "logs" / "latest.log"  # a new client writes this as soon as it starts
     t0 = time.time()
     client = threading.Thread(target=lambda: results.append(client_tour.tour(LAYER)), daemon=True)
     client.start()
-    while client.is_alive() and not (launch_out.exists() and launch_out.stat().st_mtime >= t0):
+    while client.is_alive() and not (started_log.exists() and started_log.stat().st_mtime >= t0):
         time.sleep(2)
     log = []
     proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runServer", "--no-daemon", "-q"], cwd=folder,
@@ -70,7 +70,7 @@ def main():
 
     threading.Thread(target=pump, daemon=True).start()
     try:
-        client.join(timeout=900)
+        client.join(timeout=6600)
     finally:
         try:
             proc.stdin.write("stop" + chr(10))

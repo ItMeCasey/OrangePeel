@@ -45,8 +45,8 @@ def tour(layer, viewer=None, deps=""):
     start = time.time()
     # The client runs on the hidden MCTest desktop (launch-isolated.ps1), so it cannot touch Casey's desktop, focus or cursor.
     command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra) + " > run\\launch.out 2>&1"
-    started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WorkDir", str(folder), "-Command",
-                              command], env=env, capture_output=True, text=True)
+    started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WaitMinutes", "90", "-WorkDir",
+                              str(folder), "-Command", command], env=env, capture_output=True, text=True)
     print((started.stdout + started.stderr).strip()[-600:], flush=True)
     start = time.time()  # the launcher may have queued for the single client slot; the time limit starts when the game does
     log = []
@@ -60,13 +60,15 @@ def tour(layer, viewer=None, deps=""):
             timed_out = True
             break
     # The game quits by itself after DONE; give it 30 s, then stop the run so no client is left behind.
-    for _ in range(15):
+    for _ in range(0 if os.environ.get("ORANGEPEEL_JOIN") else 15):  # with a server in the same folder the owner check cannot tell them apart
         owned = subprocess.run(["powershell", "-NoProfile", "-File", OWNS], capture_output=True, text=True).stdout
         if str(folder) not in owned:
             break
         time.sleep(2)
     else:
-        timed_out = True
+        timed_out = timed_out or not os.environ.get("ORANGEPEEL_JOIN")
+        if os.environ.get("ORANGEPEEL_JOIN"):
+            time.sleep(10)  # the client quits itself after DONE
     if timed_out:
         # Only when this run hung: -Kill stops every run on the shared hidden desktop, so never as a routine step.
         subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Kill"], capture_output=True)
