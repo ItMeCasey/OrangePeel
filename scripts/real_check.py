@@ -29,7 +29,8 @@ def main():
         "pauseOnLostFocus:false\nguiScale:3\nlang:en_us\nfullscreen:false\nonboardAccessibility:false\n"
         "skipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\n")
     env = dict(os.environ, ORANGEPEEL_SHOTS="1", ORANGEPEEL_VIEWER=viewer, ORANGEPEEL_CLICK=click,
-               ORANGEPEEL_TYPE=typed, ORANGEPEEL_HOVER=hover, **({"ORANGEPEEL_CTRLF": "1"} if os.environ.get("CTRLF") else {}))
+               ORANGEPEEL_TYPE=typed, ORANGEPEEL_HOVER=hover, **({"ORANGEPEEL_CTRLF": "1"} if os.environ.get("CTRLF") else {}),
+               **({"ORANGEPEEL_NOCLEAR": "1"} if os.environ.get("NOCLEAR") else {}))
     started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WaitMinutes", "90", "-WorkDir", str(install),
                               "-RunDir", str(game), "-Command", str(install / "launch.cmd")], env=env, capture_output=True,
                              text=True)

@@ -337,7 +337,9 @@ public final class ShotTour {
             }
             sequence.add(new Step(20, () -> {
                 logSize("before clear");
-                UiInput.clear();
+                if (System.getenv("ORANGEPEEL_NOCLEAR") == null) {
+                    UiInput.clear();
+                }
                 logSize("after clear");
             }));
             sequence.add(new Step(10, () -> {

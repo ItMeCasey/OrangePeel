@@ -23,7 +23,7 @@ Upstream builds checked with the CurseForge API on 2026-11-05. Cells say what wa
 | Viewer | NeoForge 1.21.1 | NeoForge 26.1.2 | NeoForge 26.2 | NeoForge 26.3 | Forge |
 |---|---|---|---|---|---|
 | JEI | Drew graphics | Drew graphics | Drew graphics | Drew graphics, in a real NeoForge 26.3.0.101 install with JEI 26.3, hovered by hand (frame `real_neoforge-26.3_jei_hover_by_hand.png`: shanks, saturation and comparison bar under the text lines) | 1.21.1: drew graphics; 26.x: no upstream build |
-| REI | Drew graphics | Drew graphics | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream; no newer 26.2 build) | Not run: Cloth Config 26.3 now exists (file 8952995, listed for 26.3-snapshot), but the 26.3 test tour is blocked (below) | No upstream build |
+| REI | Drew graphics | Drew graphics | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream; no newer 26.2 build) | Drew graphics, in a real NeoForge 26.3.0.101 install with REI 26.3.824, Architectury 22.0.5 and Cloth Config 26.3.159, hovered by hand (frame `real_neoforge-26.3_rei_hover_by_hand.png`: Golden Carrot with shanks and the comparison bar) | No upstream build |
 | EMI | Drew graphics | No upstream build | No upstream build | No upstream build | No upstream build |
 | BEI | Works from BEI 2026.11.4 or newer (BEI's own version number); the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |
 | SMWTI | Nothing to show: OrangePeel adds no blocks or entities | | | | |
@@ -36,7 +36,7 @@ in the game: `key.fullscreen` defaults to the D key (key code 68, read from the 
 toggled fullscreen and rebuilt the open screen. The tour now sends no key press for D. The same flips happen in a real install
 (NeoForge installer, launched from its version JSON), so it was never the dev client. With the flips gone, typing into JEI 26.3's
 search box through the tour still does not take (cause not found), so the JEI 26.3 tooltip was confirmed by hand in the real
-install instead (the tour's own frames `real_neoforge-26.3_jei_viewer_jei_*.png` show the empty search box and a non-food, so they are not evidence). REI 26.3 (Cloth Config 26.3.159 exists now) was not run yet.
+install instead (the tour's own frames `real_neoforge-26.3_jei_viewer_jei_*.png` show the empty search box and a non-food, so they are not evidence). REI 26.3 was confirmed by hand in the same real install (typing through the tour garbled its search text, so the hover was done by hand).
 
 ## Known upstream issues
 
