@@ -38,6 +38,10 @@ toggled fullscreen and rebuilt the open screen. The tour now sends no key press 
 search box through the tour still does not take (cause not found), so the JEI 26.3 tooltip was confirmed by hand in the real
 install instead (the tour's own frames `real_neoforge-26.3_jei_viewer_jei_*.png` show the empty search box and a non-food, so they are not evidence). REI 26.3 was confirmed by hand in the same real install (typing through the tour garbled its search text, so the hover was done by hand).
 
+## Foods from other mods
+
+Croptopia 4.3.2 (with EpheroLib 1.3.0) on NeoForge 26.3, real install: Apple Pie and Anchovy Pizza hovered in the inventory show their own values (shanks, saturation, hearts, comparison bar, fullness time). Frame: `real_neoforge-26.3_modded_food_croptopia.png`.
+
 ## Known upstream issues
 
 - **REI 26.2 crashes** when it renders its menu (`GuiGraphics.withFreshScissorStack`, an access error against NeoForge 26.2);

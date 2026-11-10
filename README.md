@@ -27,7 +27,7 @@ OrangePeel is client side; it also loads on a dedicated server and does nothing 
 
 Every layer compiles, passes the unit tests, loads on a dedicated server and was seen in a real game client (hunger bar
 overlays and the tooltip). Item viewers were run on NeoForge only: JEI (1.21.1 on both loaders, 26.1.2, 26.2, 26.3), REI (1.21.1, 26.1.2, 26.3) and EMI (1.21.1) draw the graphical tooltip; BEI works from BEI version 2026.11.4 (BEI's own version number, not OrangePeel's)
-(2026.11.3 and older draw the text only). Other viewer and version cells, Forge viewers other than JEI 1.21.1 and other mods' foods were not run. See
+(2026.11.3 and older draw the text only). Foods from another mod (Croptopia on NeoForge 26.3) show their real values in the drawn tooltip. Other viewer and version cells and Forge viewers other than JEI 1.21.1 were not run. See
 [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the table and [docs/TESTING.md](docs/TESTING.md) for what the checks do not cover.
 
 ## Known gaps

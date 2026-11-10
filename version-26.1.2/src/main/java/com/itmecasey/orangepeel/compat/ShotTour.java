@@ -375,6 +375,16 @@ public final class ShotTour {
                     "give @p minecraft:golden_apple 2");
             player().getAbilities().flying = false;
         });
+        then(2, () -> {
+            // Extra items for the check, e.g. foods from another mod: ORANGEPEEL_GIVE="croptopia:apple_pie 3 croptopia:anchovy_pizza 2".
+            String give = env("ORANGEPEEL_GIVE");
+            if (give != null) {
+                String[] parts = give.split(" ");
+                for (int i = 0; i + 1 < parts.length; i += 2) {
+                    server("give @p " + parts[i] + " " + parts[i + 1]);
+                }
+            }
+        });
         then(10, () -> setHunger(8, 3.0F, 12.0F));
         then(2, () -> { Minecraft.getInstance().setScreen(new InventoryScreen(player())); });
         awaitStableWindow();

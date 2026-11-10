@@ -40,6 +40,8 @@ Spend: none
 - [x] First release v2026.11.1 tagged: GitHub pre-release with four jars, CurseForge upload run succeeded (w:2)
 - [x] CurseForge approval: the project and the 2026.11.1, 2026.11.2 and 2026.11.3 files are public (checked 2026-11-06) (w:1)
 
+- [x] Foods from another mod: Croptopia 4.3.2 on NeoForge 26.3 in a real install shows its own values (docs/frames/real_neoforge-26.3_modded_food_croptopia.png) (w:1)
+
 ## Documentation and branding
 - [x] Icon, banners and section headers drawn in the SMWTI style (w:2)
 - [x] README, CHANGELOG, CurseForge description and listing kit, matching the tested state (w:2)
