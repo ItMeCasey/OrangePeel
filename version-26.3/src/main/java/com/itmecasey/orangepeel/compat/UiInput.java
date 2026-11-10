@@ -126,17 +126,56 @@ final class UiInput {
         }
     }
 
+    /** One key with modifier bits held (2 = control), pressed and released, for chords such as Ctrl+F. */
+    static void chord(int key, int modifiers) {
+        Object keyboard = Minecraft.getInstance().keyboardHandler;
+        boolean legacy = find(keyboard.getClass(), "keyPress").getParameterCount() == 5;
+        try {
+            for (int action = 1; action >= 0; action--) {
+                Method m = find(keyboard.getClass(), "keyPress");
+                Class<?>[] types = m.getParameterTypes();
+                Object[] args = new Object[types.length];
+                int next = 0;
+                for (int i = 0; i < types.length; i++) {
+                    if (types[i] == long.class) {
+                        args[i] = window();
+                    } else if (types[i] == int.class) {
+                        args[i] = legacy ? new int[] {key, 0, action, modifiers}[next++] : action;
+                    } else {
+                        Constructor<?> c = types[i].getDeclaredConstructors()[0];
+                        c.setAccessible(true);
+                        Object[] cargs = new Object[c.getParameterCount()];
+                        for (int k = 0; k < cargs.length; k++) {
+                            cargs[k] = k == 0 ? key : (k == cargs.length - 1 ? modifiers : 0);
+                        }
+                        args[i] = c.newInstance(cargs);
+                    }
+                }
+                m.invoke(keyboard, args);
+            }
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            throw new IllegalStateException("UiInput chord", e);
+        }
+    }
+
     /** Types like a keyboard does: for each character a key press, the character, and the key release. */
     static void type(String text) {
         Object keyboard = Minecraft.getInstance().keyboardHandler;
         boolean legacy = find(keyboard.getClass(), "charTyped").getParameterCount() == 3;
         text.codePoints().forEach(cp -> {
             int key = cp == ' ' ? 32 : Character.toUpperCase(cp);
-            call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
-                    ? new int[] {key, 0, 1, 0} : new int[] {1}, key);
+            // On 26.3 the key D toggles fullscreen (key.fullscreen defaults to 68), which resizes the window and rebuilds the
+            // open screen; the character is still typed, only its key press is left out.
+            boolean press = key != 68;
+            if (press) {
+                call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
+                        ? new int[] {key, 0, 1, 0} : new int[] {1}, key);
+            }
             call(keyboard, "charTyped", legacy ? new int[] {cp, 0} : new int[] {0}, cp);
-            call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
-                    ? new int[] {key, 0, 0, 0} : new int[] {0}, key);
+            if (press) {
+                call(keyboard, "keyPress", find(keyboard.getClass(), "keyPress").getParameterCount() == 5
+                        ? new int[] {key, 0, 0, 0} : new int[] {0}, key);
+            }
         });
     }
 }

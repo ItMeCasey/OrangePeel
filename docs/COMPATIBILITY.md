@@ -22,22 +22,21 @@ Upstream builds checked with the CurseForge API on 2026-11-05. Cells say what wa
 
 | Viewer | NeoForge 1.21.1 | NeoForge 26.1.2 | NeoForge 26.2 | NeoForge 26.3 | Forge |
 |---|---|---|---|---|---|
-| JEI | Drew graphics | Drew graphics | Drew graphics (frame `neoforge-26.2_viewer_jei_hover0.png`) | Not tested: BLOCKED in the test tour, see below | 1.21.1: drew graphics; 26.x: no upstream build |
+| JEI | Drew graphics | Drew graphics | Drew graphics | Drew graphics, in a real NeoForge 26.3.0.101 install with JEI 26.3, hovered by hand (frame `real_neoforge-26.3_jei_hover_by_hand.png`: shanks, saturation and comparison bar under the text lines) | 1.21.1: drew graphics; 26.x: no upstream build |
 | REI | Drew graphics | Drew graphics | Crashed: REI 26.2.820 throws `IllegalAccessError` in its own menu code (upstream; no newer 26.2 build) | Not run: Cloth Config 26.3 now exists (file 8952995, listed for 26.3-snapshot), but the 26.3 test tour is blocked (below) | No upstream build |
 | EMI | Drew graphics | No upstream build | No upstream build | No upstream build | No upstream build |
 | BEI | Works from BEI 2026.11.4 or newer (BEI's own version number); the released BEI 2026.11.3 and older draw the text only. Checked by the BEI project in its own browser, recipe popup and planner on NeoForge and Forge, 1.21.1, 26.1.2, 26.2 and 26.3; not rerun here. | | | | |
 | SMWTI | Nothing to show: OrangePeel adds no blocks or entities | | | | |
 | Jade | Nothing to show (no blocks or entities); builds exist on NeoForge only | | | | |
 
-## Why JEI 26.3 and REI 26.3 are not tested
+## What was wrong with the 26.3 test window
 
-On NeoForge 26.3 the test client's window flips between 1904x1041 and 1920x1080 while the tour clicks the viewer's search box
-(three attempts, three flips, logged as `window changed to ...`). The flip rebuilds the open screen, so the search box loses
-focus and the typed food name never arrives; the tour then hovers a non-food. JEI 26.2 works with the same tour and the same
-JEI input path (it needs a real mouse press and release and a key press, character and key release per letter, which the
-tour now sends), so this is the 26.3 test window, not JEI. The cause of the flips is not found (a late resize or a fullscreen
-toggle on the hidden desktop is suspected). REI 26.3 uses the same search step, so its launch was not worth repeating; its
-last launch attempt never started because another project held the single client slot.
+On NeoForge 26.3 the test client's window flipped between 1904x1041 and 1920x1080 whenever the tour typed a search. The cause is
+in the game: `key.fullscreen` defaults to the D key (key code 68, read from the 26.3 `Options` bytecode), so the D in "golden"
+toggled fullscreen and rebuilt the open screen. The tour now sends no key press for D. The same flips happen in a real install
+(NeoForge installer, launched from its version JSON), so it was never the dev client. With the flips gone, typing into JEI 26.3's
+search box through the tour still does not take (cause not found), so the JEI 26.3 tooltip was confirmed by hand in the real
+install instead (the tour's own frames `real_neoforge-26.3_jei_viewer_jei_*.png` show the empty search box and a non-food, so they are not evidence). REI 26.3 (Cloth Config 26.3.159 exists now) was not run yet.
 
 ## Known upstream issues
 

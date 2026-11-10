@@ -51,6 +51,7 @@ public final class ShotTour {
     private static final Deque<Step> STEPS = new ArrayDeque<>();
     private static Stage stage = Stage.WAITING_FOR_MENU;
     private static int idle;
+    private static int beat;
     private static int wait;
     /** The first air block above the superflat ground. */
     private static int ground;
@@ -66,6 +67,10 @@ public final class ShotTour {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.mouseHandler.isMouseGrabbed()) {
             minecraft.mouseHandler.releaseMouse();
+        }
+        if (++beat % 200 == 0) {
+            OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS heartbeat stage={} idle={} window={}x{}", stage, idle,
+                    minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
         }
         switch (stage) {
             case WAITING_FOR_MENU -> waitForMenu(minecraft);
@@ -295,6 +300,12 @@ public final class ShotTour {
         });
     }
 
+    private static void logSize(String when) {
+        Minecraft minecraft = Minecraft.getInstance();
+        OrangePeel.LOGGER.info("ORANGEPEEL-SHOTS size {} {}x{}", when, minecraft.getWindow().getWidth(),
+                minecraft.getWindow().getHeight());
+    }
+
     private static int clickWidth;
     private static int clickHeight;
 
@@ -315,12 +326,25 @@ public final class ShotTour {
             UiInput.press(at[0], at[1]);
         }));
         sequence.add(new Step(4, () -> {
+            logSize("after press");
             double[] at = xy(click);
             UiInput.release(at[0], at[1]);
+            logSize("after release");
         }));
         if (type != null) {
-            sequence.add(new Step(20, UiInput::clear));
-            sequence.add(new Step(10, () -> UiInput.type(type)));
+            if (System.getenv("ORANGEPEEL_CTRLF") != null) {
+                sequence.add(new Step(10, () -> UiInput.chord(70, 2)));
+            }
+            sequence.add(new Step(20, () -> {
+                logSize("before clear");
+                UiInput.clear();
+                logSize("after clear");
+            }));
+            sequence.add(new Step(10, () -> {
+                logSize("before type");
+                UiInput.type(type);
+                logSize("after type");
+            }));
         }
         sequence.add(new Step(30, () -> {
             Minecraft minecraft = Minecraft.getInstance();
@@ -362,6 +386,22 @@ public final class ShotTour {
         });
         awaitStableWindow();
         shoot("viewer_" + viewer + "_screen", 80);
+        String flip = env("ORANGEPEEL_FLIP");
+        if (flip != null) {
+            // Pages through the viewer's item list: "x,y,count" is its next-page arrow and how many times to press it.
+            String[] f = flip.split(",");
+            for (int i = 1; i <= Integer.parseInt(f[2].trim()); i++) {
+                then(2, () -> {
+                    double[] p = xy(f[0] + "," + f[1]);
+                    UiInput.press(p[0], p[1]);
+                });
+                then(4, () -> {
+                    double[] p = xy(f[0] + "," + f[1]);
+                    UiInput.release(p[0], p[1]);
+                });
+                shoot("viewer_" + viewer + "_page" + i, 10);
+            }
+        }
         String click = env("ORANGEPEEL_CLICK");
         if (click != null) {
             String type = env("ORANGEPEEL_TYPE");

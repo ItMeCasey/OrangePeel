@@ -106,5 +106,8 @@ tasks.withType(Test).configureEach {
 
 // The development screenshot tour is not part of a release: it only runs from runClient (the class folders).
 tasks.named('jar') {
-    exclude 'com/itmecasey/orangepeel/compat/ShotTour*', 'com/itmecasey/orangepeel/compat/UiInput*'
+    // -PwithTour keeps the dev screenshot tour in the jar, for the real-install viewer check (never for a release).
+    if (!project.hasProperty('withTour')) {
+        exclude 'com/itmecasey/orangepeel/compat/ShotTour*', 'com/itmecasey/orangepeel/compat/UiInput*'
+    }
 }
