@@ -102,6 +102,7 @@ dependencies {
     (findProperty('viewers') ?: '').toString().split(',').findAll { it }.each { runtimeOnly(it.startsWith('file:') ? files(it.substring(5)) : it) }
     testImplementation platform("org.junit:junit-bom:5.11.4")
     testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "org.mozilla:rhino:1.7.15"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 

@@ -7,6 +7,9 @@ import com.itmecasey.orangepeel.OrangePeel;
 import com.itmecasey.orangepeel.PlayerState;
 import com.itmecasey.orangepeel.TooltipModel;
 import com.itmecasey.orangepeel.api.OrangePeelApi;
+import com.itmecasey.orangepeel.script.ModJsBridge;
+import com.itmecasey.orangepeel.script.ScriptApi;
+import com.itmecasey.orangepeel.script.ScriptState;
 import java.util.ArrayList;
 import java.util.List;
 import com.mojang.datafixers.util.Either;
@@ -57,6 +60,38 @@ public final class ClientHooks {
 
     public static void init(Bridge b) {
         bridge = b;
+        ScriptApi.attach(new ScriptState() {
+            @Override
+            public PlayerState player() {
+                return bridge == null ? null : bridge.player();
+            }
+
+            @Override
+            public FoodInfo held() {
+                ItemStack held = bridge == null ? ItemStack.EMPTY : bridge.heldFood();
+                return held.isEmpty() ? null : bridge.food(held);
+            }
+
+            @Override
+            public List<FoodInfo> carried() {
+                return bridge == null ? List.of() : carriedFoods();
+            }
+        });
+        ModJsBridge.install(ScriptApi.INSTANCE);
+    }
+
+    /** One entry per food stack in the inventory. */
+    private static List<FoodInfo> carriedFoods() {
+        List<FoodInfo> carried = new ArrayList<>();
+        for (ItemStack s : bridge.inventory()) {
+            if (!s.isEmpty()) {
+                FoodInfo f = bridge.food(s);
+                if (f != null) {
+                    carried.add(f);
+                }
+            }
+        }
+        return carried;
     }
 
     /** Adds the food lines to an item tooltip. Safe to call for every item. */
@@ -69,15 +104,7 @@ public final class ClientHooks {
             return;
         }
         PlayerState player = bridge.player();
-        List<FoodInfo> carried = new ArrayList<>();
-        for (ItemStack s : bridge.inventory()) {
-            if (!s.isEmpty()) {
-                FoodInfo f = bridge.food(s);
-                if (f != null) {
-                    carried.add(f);
-                }
-            }
-        }
+        List<FoodInfo> carried = carriedFoods();
         for (TooltipModel.Line line : TooltipModel.build(food, player, carried)) {
             Style style = Style.EMPTY.withColor(color(line.tone()));
             if (line.graphic()) {
@@ -87,6 +114,9 @@ public final class ClientHooks {
         }
         for (OrangePeelApi.TooltipProvider provider : OrangePeelApi.providers()) {
             provider.addLines(stack, food, tooltip);
+        }
+        for (String line : ScriptApi.tooltipLines(food)) {
+            tooltip.add(Component.literal(line));
         }
     }
 
@@ -102,15 +132,7 @@ public final class ClientHooks {
         if (food == null) {
             return null;
         }
-        List<FoodInfo> carried = new ArrayList<>();
-        for (ItemStack s : bridge.inventory()) {
-            if (!s.isEmpty()) {
-                FoodInfo f = bridge.food(s);
-                if (f != null) {
-                    carried.add(f);
-                }
-            }
-        }
+        List<FoodInfo> carried = carriedFoods();
         MealComparator.Result ranking = MealComparator.compare(food, carried);
         return new FoodTooltipData(food, bridge.player(), ranking.others() > 0 ? ranking : null);
     }

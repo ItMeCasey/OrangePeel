@@ -12,8 +12,9 @@ tooltip ranks it against the other food in your inventory.
   numbers, effect names with levels and durations, a waste warning, and how long the food keeps you full. The text lines
   are the fallback for item viewers that cannot draw tooltip graphics; `graphicalTooltip=false` keeps text only.
 - **Meal comparator:** hover a food to see how it ranks against the other foods you carry ("Better than 4 of your other 5
-  foods"), with a bar showing how far it is from your best food, a flag on the best one, and a note when another food fits
-  your hunger better right now.
+  foods"), with a bar showing how far it is from your best food, and a flag on the best one.
+- **Scripting:** with ModJS installed, client scripts get an `OrangePeel` global: add tooltip lines, read the held food, hunger
+  and ranking, and change settings (see [docs/scripting.md](docs/scripting.md)).
 - **Modded foods work:** food values are read from the game's own food data, so no per-mod support is needed.
 - **Config:** `config/orangepeel-client.properties` sets HUD opacity and offset and turns each overlay and tooltip line on or off.
 - **API:** other mods can add tooltip lines. See [docs/API.md](docs/API.md).
