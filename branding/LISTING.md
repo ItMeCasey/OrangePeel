@@ -50,5 +50,4 @@ The CurseForge description is in [`curseforge/DESCRIPTION.md`](../curseforge/DES
 1. Push `branding/` to GitHub so the description images load.
 2. Create the CurseForge project with `icon_512.png` as the logo, then record the project id above. New projects are reviewed before they go live.
 3. Set `banners/social.png` as the GitHub social preview.
-4. Fill in the Tested line in the description at release.
-5. Optional: `icon/orangepeel_logo.png` is the jar's mod list logo.
+4. Optional: `icon/orangepeel_logo.png` is the jar's mod list logo.

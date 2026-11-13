@@ -55,33 +55,4 @@ public final class MealComparator {
         return new Result(all.size() - 1, better, held.score() >= bestScore, best, fraction,
                 Math.min(0f, held.score() - bestScore));
     }
-
-    /** What a food would actually add right now: hunger points that fit, plus the saturation that fits. */
-    public static float effectiveValue(PlayerState p, FoodInfo f) {
-        int fitting = Math.min(f.nutrition(), FoodMath.MAX_FOOD - p.foodLevel());
-        float satGain = FoodMath.saturationAfter(p.foodLevel(), p.saturation(), f.nutrition(), f.saturation())
-                - Math.min(p.saturation(), FoodMath.foodAfter(p.foodLevel(), f.nutrition()));
-        return Math.max(0, fitting) + Math.max(0f, satGain);
-    }
-
-    /**
-     * The food that fits the player's hunger best right now: the highest effective value, and among equals the one that
-     * wastes the least (lowest raw score). Null when the hunger bar is already full, so nothing helps.
-     */
-    public static FoodInfo bestForHunger(PlayerState p, List<FoodInfo> foods) {
-        if (p.foodLevel() >= FoodMath.MAX_FOOD) {
-            return null;
-        }
-        FoodInfo best = null;
-        float bestValue = 0f;
-        for (FoodInfo f : foods) {
-            float v = effectiveValue(p, f);
-            if (v > bestValue + 1e-4f || (best != null && Math.abs(v - bestValue) <= 1e-4f && v > 0f
-                    && f.score() < best.score())) {
-                best = f;
-                bestValue = v;
-            }
-        }
-        return best;
-    }
 }

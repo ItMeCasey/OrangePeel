@@ -33,6 +33,19 @@ class TooltipModelTest {
     }
 
     @Test
+    void theTooltipGivesNoAdviceAboutWhatToEat() {
+        FoodInfo steak = food("steak", 8, 12.8f);
+        FoodInfo apple = food("apple", 4, 2.4f);
+        PlayerState nearlyFull = new PlayerState(19, 0f, 0f, 20f, 20f, 0f, true);
+        for (FoodInfo held : List.of(steak, apple)) {
+            for (TooltipModel.Line line : TooltipModel.build(held, nearlyFull, List.of(steak, apple))) {
+                assertFalse(line.text().contains("Best pick"), line.text());
+                assertFalse(line.text().contains("Less waste"), line.text());
+            }
+        }
+    }
+
+    @Test
     void bestFoodIsFlagged() {
         FoodInfo steak = food("steak", 8, 12.8f);
         List<TooltipModel.Line> lines = TooltipModel.build(steak, null, List.of(steak, food("apple", 4, 2.4f)));

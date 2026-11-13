@@ -9,7 +9,7 @@ OrangePeel shows what food does before you eat it. Hold a food and your hunger b
 Hover a food and OrangePeel ranks it against every other food in your inventory.
 
 - **Ranked:** "Better than 4 of your other 6 foods", with a small bar showing how far it sits from your best one.
-- **Best choice:** your best food overall is flagged, and so is the best pick for your hunger right now, so you stop wasting a big meal on a nearly full bar.
+- **Best choice:** your best food overall is flagged.
 - **No waste:** if eating would overfill your hunger bar, the wasted points show in orange.
 - **Effects:** names and durations of the effects a food gives.
 
@@ -26,6 +26,7 @@ Hover a food and OrangePeel ranks it against every other food in your inventory.
 - Reads food values from the game, so modded foods work without extra support.
 - The lines are added through the game's normal item tooltip, which item viewers such as JEI, EMI and REI use. Every graphic has a plain-text version.
 - Other mods can add their own tooltip lines through a small API.
+- With ModJS installed, client scripts can add tooltip lines, read the held food, your hunger and the ranking, and change settings.
 
 The pictures on this page are illustrations drawn for the listing, not game screenshots.
 

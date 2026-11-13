@@ -64,30 +64,4 @@ class MealComparatorTest {
         assertEquals(0, r.others());
         assertTrue(r.best());
     }
-
-    private static PlayerState hunger(int food, float sat) {
-        return new PlayerState(food, sat, 0f, 20f, 20f, 0f, true);
-    }
-
-    @Test
-    void bestForHungerPrefersWhatFitsNotWhatIsBiggest() {
-        // food 19: only one hunger point fits, but the steak still adds the most saturation
-        FoodInfo best = MealComparator.bestForHunger(hunger(19, 0f), List.of(steak, berries, apple));
-        assertEquals("minecraft:steak", best.id());
-        // food 10: the steak fills the most
-        assertEquals("minecraft:steak", MealComparator.bestForHunger(hunger(10, 0f), List.of(apple, steak)).id());
-    }
-
-    @Test
-    void bestForHungerTiesGoToTheLessWastefulFood() {
-        FoodInfo small = food("small", 2, 0f);
-        FoodInfo big = food("big", 8, 0f);
-        // food 18: both give 2 effective points; the small one wastes nothing
-        assertEquals("minecraft:small", MealComparator.bestForHunger(hunger(18, 0f), List.of(big, small)).id());
-    }
-
-    @Test
-    void fullBarHasNoBestFood() {
-        assertEquals(null, MealComparator.bestForHunger(hunger(20, 5f), List.of(apple, steak)));
-    }
 }
