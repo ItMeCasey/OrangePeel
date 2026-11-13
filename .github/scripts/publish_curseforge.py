@@ -36,14 +36,37 @@ RELEASE_TYPES = ("alpha", "beta", "release")
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def module_version(module):
+    """The mod_version in the module's gradle.properties, or None when the module folder is missing."""
+    props = ROOT / module / "gradle.properties"
+    if not props.is_file():
+        return None
+    for line in props.read_text(encoding="utf-8").splitlines():
+        if line.startswith("mod_version="):
+            return line.split("=", 1)[1].strip()
+    return None
+
+
 def module_versions():
     """Every mod_version found in the modules' gradle.properties files."""
-    found = set()
-    for props in ROOT.glob("*/gradle.properties"):
-        for line in props.read_text(encoding="utf-8").splitlines():
-            if line.startswith("mod_version="):
-                found.add(line.split("=", 1)[1].strip())
-    return found
+    return {v for v in (module_version(p.parent.name) for p in ROOT.glob("*/gradle.properties")) if v}
+
+
+def released_minecraft_versions(version):
+    """The Minecraft versions whose Forge and NeoForge modules both carry this version; the others are skipped.
+    A version with only one loader at it is an error (the combined jar holds both layers)."""
+    chosen = []
+    for minecraft in MINECRAFT:
+        forge, neoforge = module_version(f"forge-{minecraft}"), module_version(f"neoforge-{minecraft}")
+        if forge == version and neoforge == version:
+            chosen.append(minecraft)
+        elif version in (forge, neoforge):
+            sys.exit(f"Minecraft {minecraft}: forge has {forge}, neoforge has {neoforge}; both must carry {version}")
+        else:
+            print(f"skip Minecraft {minecraft}: modules carry {forge}/{neoforge}, not {version}")
+    if not chosen:
+        sys.exit(f"No Minecraft version has both loaders at mod_version {version}")
+    return chosen
 
 
 def jar_versions(jar):
@@ -112,13 +135,13 @@ def main():
         return
     if not (args.jars and args.version and args.changelog_file):
         parser.error("--jars, --version and --changelog-file are required")
-    if module_versions() != {args.version}:
-        sys.exit(f"Modules carry mod_version {sorted(module_versions())}, not {args.version}")
+    released = released_minecraft_versions(args.version)
 
     versions = request(f"{API}/game/versions")
     changelog = args.changelog_file.read_text(encoding="utf-8")
     plan = []
-    for minecraft, java in MINECRAFT.items():
+    for minecraft in released:
+        java = MINECRAFT[minecraft]
         jar = args.jars / f"orangepeel-mc{minecraft}-{args.version}.jar"
         if not jar.is_file():
             sys.exit(f"Missing combined jar {jar}")

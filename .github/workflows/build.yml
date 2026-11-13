@@ -6,20 +6,45 @@ on:
   pull_request:
 
 jobs:
+  plan:
+    # Only the layers that the pushed files affect are built (see .github/scripts/plan_matrix.py); docs, status and workflow
+    # only pushes build nothing.
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      any: ${{ steps.plan.outputs.any }}
+      test: ${{ steps.plan.outputs.test }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - id: plan
+        env:
+          BEFORE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: python3 .github/scripts/plan_matrix.py build --before "$BEFORE" --sha "${{ github.sha }}"
+
   versions:
-    # Every module must carry the same mod_version; releases are tagged v<mod_version>.
+    # The two loaders of each Minecraft version must carry the same mod_version (one combined jar holds both); releases are
+    # tagged v<mod_version> and ship the Minecraft versions whose modules carry that version.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: All modules agree on mod_version
+      - name: Both loaders of each Minecraft version agree on mod_version
         run: |
-          versions=$(grep -h '^mod_version=' */gradle.properties | sort -u)
-          echo "$versions"
-          test "$(echo "$versions" | wc -l)" -eq 1
+          status=0
+          for mc in 1.21.1 26.1.2 26.2 26.3; do
+            forge=$(sed -n 's/^mod_version=//p' forge-$mc/gradle.properties)
+            neoforge=$(sed -n 's/^mod_version=//p' neoforge-$mc/gradle.properties)
+            echo "$mc: forge $forge, neoforge $neoforge"
+            if [ -z "$forge" ] || [ "$forge" != "$neoforge" ]; then echo "Minecraft $mc: the loaders disagree on mod_version"; status=1; fi
+          done
+          exit $status
 
   test:
-    # Unit tests for the shared logic that does not need a running game.
-    needs: versions
+    # Unit tests for the shared logic that does not need a running game. Runs when neoforge-1.21.1 is built (every change to
+    # common/ or version-1.21.1/ selects it).
+    needs: [versions, plan]
+    if: needs.plan.outputs.test == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,27 +59,11 @@ jobs:
       - run: ./gradlew test --no-daemon
 
   build:
-    needs: versions
+    needs: [versions, plan]
+    if: needs.plan.outputs.any == 'true'
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - module: neoforge-1.21.1
-            java: 21
-          - module: forge-1.21.1
-            java: 21
-          - module: neoforge-26.1.2
-            java: 25
-          - module: forge-26.1.2
-            java: 25
-          - module: neoforge-26.2
-            java: 25
-          - module: forge-26.2
-            java: 25
-          - module: neoforge-26.3
-            java: 25
-          - module: forge-26.3
-            java: 25
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -76,7 +85,8 @@ jobs:
             !${{ matrix.module }}/build/libs/*-dev.jar
 
   combine:
-    # One combined jar per Minecraft version, holding every loader's layer.
+    # One combined jar per Minecraft version, holding every loader's layer. Only versions whose two layers were both built in
+    # this run are combined.
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -88,7 +98,11 @@ jobs:
         run: |
           mkdir -p dist
           for mc in 1.21.1 26.1.2 26.2 26.3; do
-            jars=$(ls layers/*-$mc/*.jar)
+            if [ ! -d "layers/forge-$mc" ] || [ ! -d "layers/neoforge-$mc" ]; then
+              echo "$mc: not both layers built in this run, skipping"
+              continue
+            fi
+            jars=$(ls layers/forge-$mc/*.jar layers/neoforge-$mc/*.jar)
             echo "$mc: $jars"
             version=$(grep -h '^mod_version=' forge-$mc/gradle.properties | cut -d= -f2)
             python3 scripts/combine_jars.py "dist/orangepeel-mc$mc-$version.jar" $jars
@@ -98,3 +112,4 @@ jobs:
         with:
           name: combined-jars
           path: dist/*.jar
+          if-no-files-found: ignore
