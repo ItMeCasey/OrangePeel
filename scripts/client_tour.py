@@ -44,19 +44,27 @@ def tour(layer, viewer=None, deps=""):
     latest = run / "logs" / "latest.log"
     start = time.time()
     # The client runs on the hidden MCTest desktop (launch-isolated.ps1), so it cannot touch Casey's desktop, focus or cursor.
-    command = ".\\gradlew.bat runClient --no-daemon -q " + " ".join(extra) + " > run\\launch.out 2>&1"
+    # Gradle only through the one global Gradle slot (many sessions build on this PC).
+    command = ('"C:\\Program Files\\Git\\bin\\bash.exe" /c/Users/casey/.claude/tools/gradle-slot.sh ./gradlew runClient '
+               '--no-daemon -q ' + " ".join(extra) + " > run\\launch.out 2>&1")
     started = subprocess.run(["powershell", "-NoProfile", "-File", LAUNCH, "-Run", "-WaitMinutes", "90", "-WorkDir",
                               str(folder), "-Command", command], env=env, capture_output=True, text=True)
     print((started.stdout + started.stderr).strip()[-600:], flush=True)
     start = time.time()  # the launcher may have queued for the single client slot; the time limit starts when the game does
     log = []
     timed_out = False
+    first_log = None  # Gradle waits for the global Gradle slot first, so the clock starts when the game writes its log
     while True:
         time.sleep(3)
         text = latest.read_text(encoding="utf-8", errors="replace") if latest.exists() and latest.stat().st_mtime >= start else ""
+        if text and first_log is None:
+            first_log = time.time()
         if "ORANGEPEEL-SHOTS DONE" in text or "ORANGEPEEL-SHOTS FAILED" in text or "Crash report saved" in text:
             break
-        if time.time() - start > TIMEOUT:
+        if first_log is not None and time.time() - first_log > TIMEOUT:
+            timed_out = True
+            break
+        if first_log is None and time.time() - start > 90 * 60:
             timed_out = True
             break
     # The game quits by itself after DONE; give it 30 s, then stop the run so no client is left behind.

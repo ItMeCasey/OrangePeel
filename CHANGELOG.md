@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.11.4
+
+- ModJS scripting (optional): client scripts get an `OrangePeel` global to add food tooltip lines, read the held food, your hunger and the meal ranking, and change settings for the session. See docs/scripting.md. Nothing changes without ModJS.
+- Removed the advice lines "Best pick for your hunger right now" and "Less waste right now: <food>" from the food tooltip. The tooltip keeps names and values: hunger, saturation, the ranking, the waste warning, effects and how long the food keeps you full.
+
 ## 2026.11.3
 
 - Exhaustion underlay: the server sends each player's exhaustion to that player's client (a one-float packet, optional on both sides, at most every 5 ticks and only when it changed), and the hunger bar draws it as a translucent veil over the shanks. The health regeneration and fullness estimates now use it. New config switch `sendExhaustion` (server side). The server self test now logs `SELFTEST DONE failures=0` and checks that exhaustion can be read.
