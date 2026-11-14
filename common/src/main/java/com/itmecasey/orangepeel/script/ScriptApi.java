@@ -5,6 +5,7 @@ import com.itmecasey.orangepeel.FoodInfo;
 import com.itmecasey.orangepeel.FoodMath;
 import com.itmecasey.orangepeel.MealComparator;
 import com.itmecasey.orangepeel.PlayerState;
+import com.itmecasey.orangepeel.Settings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -128,68 +129,33 @@ public final class ScriptApi {
 
     // --- settings -----------------------------------------------------------------------------------------------
 
-    private static final List<String> CONFIG = List.of("hudOpacity", "hudOffsetX", "hudOffsetY", "showHungerPreview",
-            "showSaturationOverlay", "showExhaustionUnderlay", "showHealthPreview", "steadyPreview", "showTooltip",
-            "graphicalTooltip", "showComparator", "showWaste", "showEffects", "showFullness");
-
-    /** The names {@link #config} and {@link #setConfig} accept (the keys of orangepeel-client.properties). */
+    /** The names {@link #config} and {@link #setConfig} accept: the client settings, the keys of orangepeel-client.toml. */
     public List<String> configNames() {
-        return CONFIG;
+        List<String> names = new ArrayList<>();
+        for (Settings.Entry e : Settings.ENTRIES) {
+            if (e.side() == Settings.Side.CLIENT) {
+                names.add(e.key());
+            }
+        }
+        return names;
     }
 
     /** A setting's current value: a number or a boolean. */
     public Object config(String name) {
-        return switch (name) {
-            case "hudOpacity" -> Config.hudOpacity;
-            case "hudOffsetX" -> Config.hudOffsetX;
-            case "hudOffsetY" -> Config.hudOffsetY;
-            case "showHungerPreview" -> Config.showHungerPreview;
-            case "showSaturationOverlay" -> Config.showSaturationOverlay;
-            case "showExhaustionUnderlay" -> Config.showExhaustionUnderlay;
-            case "showHealthPreview" -> Config.showHealthPreview;
-            case "steadyPreview" -> Config.steadyPreview;
-            case "showTooltip" -> Config.showTooltip;
-            case "graphicalTooltip" -> Config.graphicalTooltip;
-            case "showComparator" -> Config.showComparator;
-            case "showWaste" -> Config.showWaste;
-            case "showEffects" -> Config.showEffects;
-            case "showFullness" -> Config.showFullness;
-            default -> throw new IllegalArgumentException("OrangePeel has no setting named " + name);
-        };
+        requireClientSetting(name);
+        return Config.get(name);
     }
 
     /** Changes a setting until the game closes; the config file is not touched. */
     public void setConfig(String name, Object value) {
-        switch (name) {
-            case "hudOpacity" -> Config.hudOpacity = Math.max(0, Math.min(100, number(name, value)));
-            case "hudOffsetX" -> Config.hudOffsetX = number(name, value);
-            case "hudOffsetY" -> Config.hudOffsetY = number(name, value);
-            case "showHungerPreview" -> Config.showHungerPreview = flag(name, value);
-            case "showSaturationOverlay" -> Config.showSaturationOverlay = flag(name, value);
-            case "showExhaustionUnderlay" -> Config.showExhaustionUnderlay = flag(name, value);
-            case "showHealthPreview" -> Config.showHealthPreview = flag(name, value);
-            case "steadyPreview" -> Config.steadyPreview = flag(name, value);
-            case "showTooltip" -> Config.showTooltip = flag(name, value);
-            case "graphicalTooltip" -> Config.graphicalTooltip = flag(name, value);
-            case "showComparator" -> Config.showComparator = flag(name, value);
-            case "showWaste" -> Config.showWaste = flag(name, value);
-            case "showEffects" -> Config.showEffects = flag(name, value);
-            case "showFullness" -> Config.showFullness = flag(name, value);
-            default -> throw new IllegalArgumentException("OrangePeel has no setting named " + name);
-        }
+        requireClientSetting(name);
+        Config.set(name, value);
     }
 
-    private static int number(String name, Object value) {
-        if (value instanceof Number n) {
-            return (int) Math.round(n.doubleValue());
+    private static void requireClientSetting(String name) {
+        Settings.Entry e = Settings.entry(name);
+        if (e == null || e.side() != Settings.Side.CLIENT) {
+            throw new IllegalArgumentException("OrangePeel has no setting named " + name);
         }
-        throw new IllegalArgumentException("OrangePeel setting " + name + " takes a number");
-    }
-
-    private static boolean flag(String name, Object value) {
-        if (value instanceof Boolean b) {
-            return b;
-        }
-        throw new IllegalArgumentException("OrangePeel setting " + name + " takes true or false");
     }
 }

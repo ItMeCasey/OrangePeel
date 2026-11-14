@@ -32,7 +32,7 @@ carried scores higher), `bestFood()`, `fractionOfBest()` (0 to 1) and `deltaVsBe
 
 | Call | What it does |
 |---|---|
-| `OrangePeel.configNames()` | The setting names, the same keys as `config/orangepeel-client.properties`. |
+| `OrangePeel.configNames()` | The setting names, the same keys as `config/orangepeel-client.toml`. |
 | `OrangePeel.config(name)` | A setting's current value (a number or true/false). |
 | `OrangePeel.setConfig(name, value)` | Changes a setting until the game closes. The config file is not changed. `hudOpacity` is clamped to 0 to 100. |
 

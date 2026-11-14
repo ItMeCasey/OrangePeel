@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.11.5
+
+- Settings now use the loader's standard config: `orangepeel-client.toml` (everything a player sets) and `orangepeel-common.toml` (`sendExhaustion`, decided by the server), with a comment and range for every value. NeoForge adds an in-game config screen from the Mods screen.
+- Migration: the first time no `.toml` exists and the old `config/orangepeel-client.properties` does, every old value is imported once. After the new files are written and checked, the old file is renamed to `orangepeel-client.properties.back` with a first line that says where and why it migrated (`.back2`, `.back3` if a backup already exists; never overwritten). A file that cannot be read completely stays where it is and the game log says why.
+
 ## 2026.11.4
 
 - ModJS scripting (optional): client scripts get an `OrangePeel` global to add food tooltip lines, read the held food, your hunger and the meal ranking, and change settings for the session. See docs/scripting.md. Nothing changes without ModJS.

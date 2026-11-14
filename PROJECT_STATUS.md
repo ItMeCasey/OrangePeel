@@ -1,6 +1,6 @@
 # Project Status
 <!-- status-format: 1 -->
-Updated: 2026-11-13
+Updated: 2026-11-14
 Summary: Food HUD and tooltip mod with a meal comparator and an exhaustion underlay; 2026.11.3 is released and public on CurseForge for 1.21.1, 26.1.2, 26.2 and 26.3.
 Spend: none
 
@@ -19,6 +19,7 @@ Spend: none
 - [x] Meal comparator: rank against inventory, delta bar, best-food flag (w:4)
 - [x] Fullness timer line (w:1)
 - [x] Config file: opacity, offset, switches per overlay and tooltip line (w:2)
+- [~] Loader-standard config (.toml, NeoForge config screen) with one-time migration from the old .properties file (verified, then moved to .back) (unit tests with fixtures from each release; loader builds compiled; toml import not yet seen in a running game on every layer) (w:2)
 - [x] API for other mods to add tooltip lines (w:2)
 
 ## Testing and release

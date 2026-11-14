@@ -9,7 +9,10 @@ import com.itmecasey.orangepeel.compat.BridgeImpl;
 import com.itmecasey.orangepeel.compat.HudDrawImpl;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -23,8 +26,9 @@ final class NeoForgeClientSetup {
     private NeoForgeClientSetup() {
     }
 
-    static void install(IEventBus modBus) {
+    static void install(IEventBus modBus, ModContainer container) {
         ClientHooks.init(new BridgeImpl());
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         modBus.addListener((RegisterGuiLayersEvent e) -> e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
                 Identifier.fromNamespaceAndPath(OrangePeel.MODID, "food_overlay"),
                 (graphics, delta) -> ClientHooks.onHud(new HudDrawImpl(graphics))));

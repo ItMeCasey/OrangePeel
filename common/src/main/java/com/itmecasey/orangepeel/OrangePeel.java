@@ -13,9 +13,11 @@ public final class OrangePeel {
     private OrangePeel() {
     }
 
-    /** Called once by each loader entry point. */
+    /**
+     * Called once by each loader entry point. The settings are not read here: the loader registers its .toml files, which
+     * push their values into {@link Config} when they load (see {@link Settings}).
+     */
     public static void init(Supplier<Path> configFolder) {
-        Config.load(configFolder.get().resolve("orangepeel-client.properties"));
         LOGGER.info("OrangePeel loaded");
         if (System.getenv("ORANGEPEEL_SELFTEST") != null) {
             SelfTest.run();

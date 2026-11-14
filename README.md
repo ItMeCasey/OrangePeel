@@ -16,7 +16,7 @@ tooltip ranks it against the other food in your inventory.
 - **Scripting:** with ModJS installed, client scripts get an `OrangePeel` global: add tooltip lines, read the held food, hunger
   and ranking, and change settings (see [docs/scripting.md](docs/scripting.md)).
 - **Modded foods work:** food values are read from the game's own food data, so no per-mod support is needed.
-- **Config:** `config/orangepeel-client.properties` sets HUD opacity and offset and turns each overlay and tooltip line on or off.
+- **Config:** `config/orangepeel-client.toml` sets HUD opacity and offset and turns each overlay and tooltip line on or off (`orangepeel-common.toml` holds the server switch `sendExhaustion`); NeoForge also has an in-game config screen. Settings from the old `orangepeel-client.properties` are imported once and that file is renamed to `orangepeel-client.properties.back`.
 - **API:** other mods can add tooltip lines. See [docs/API.md](docs/API.md).
 
 ## Versions and loaders

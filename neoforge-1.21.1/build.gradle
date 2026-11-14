@@ -22,6 +22,7 @@ sourceSets {
     }
     test {
         java.srcDir "../common/src/test/java"
+        resources.srcDir "../common/src/test/resources"
     }
 }
 

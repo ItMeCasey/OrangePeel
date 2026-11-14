@@ -11,6 +11,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 public final class ForgeOrangePeel {
     public ForgeOrangePeel(FMLJavaModLoadingContext context) {
         OrangePeel.init(FMLPaths.CONFIGDIR::get);
+        ForgeConfig.register(context, FMLPaths.CONFIGDIR.get());
         ForgeExhaustionNet.install();
         if (FMLEnvironment.dist.isClient()) {
             ForgeClientSetup.install();
