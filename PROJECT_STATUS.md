@@ -44,7 +44,7 @@ Spend: none
 
 - [~] ModJS scripting support: OrangePeel global for client scripts (tooltip lines, held food, player, ranking, settings), unit tested with Rhino and a ModJS stand-in on all layers' test task via the shared tests; not yet run with the real ModJS jar in a game (w:3)
 - [x] No hints: removed the best-pick advice lines from the tooltip (and the code and tests behind them; a unit test checks they are gone), the CurseForge description has no test or install text (w:1)
-- [ ] Tooltip frames after the hint removal on one NeoForge and one Forge build: blocked, the launch-isolated state file (MCTest.json) is all NUL bytes, so no client can be launched; rerun scripts/client_tour.py neoforge-1.21.1 and forge-1.21.1 once it is repaired (w:1)
+- [x] Tooltip frames after the hint removal on NeoForge 1.21.1 and Forge 1.21.1 (docs/frames/*_hints_tooltip_*.png); server self test on NeoForge 26.2 and Forge 26.3 passed (w:1)
 
 ## Documentation and branding
 - [x] Icon, banners and section headers drawn in the SMWTI style (w:2)

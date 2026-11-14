@@ -48,3 +48,15 @@ mode, the test player is an operator) and one client that joins it, asks for the
 the server`, and `docs/frames/dedicated_neoforge-1.21.1_join_before.png` (no veil) against `join_exhaustion_a` and `_c` (the veil
 grows) show it. The EULA was accepted by Casey for this test server only; `run-server` and `eula.txt` are git-ignored. Only
 NeoForge 1.21.1 was run this way; the other layers use the same server code and were seen through the integrated server.
+
+## Round 2026.11.4 (ModJS scripting, advice lines removed)
+
+- **Unit tests:** 42 on NeoForge 1.21.1 and Forge 1.21.1, including six that run real JavaScript through Rhino against a ModJS
+  stand-in (`ScriptApiTest`) and one that checks the tooltip gives no advice lines.
+- **Server self test** (`scripts/server_check.py`, Gradle through the slot, prints `SELFTEST DONE failures=0`): NeoForge 26.2 and
+  Forge 26.3 passed. The other layers were not run for this round.
+- **Tooltip frames after removing "Best pick for your hunger right now" and "Less waste right now":** NeoForge 1.21.1 and Forge
+  1.21.1 (`docs/frames/*_hints_tooltip_*.png`: steak when hungry, bread and golden apple when nearly full). The names, hunger and
+  saturation rows, the ranking line, the waste warning, effects and the fullness time remain; the two advice lines are gone.
+- **Not run:** the `OrangePeel` global with the real ModJS jar in a game.
+

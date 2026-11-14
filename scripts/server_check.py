@@ -23,7 +23,7 @@ PORTS = {
     "neoforge-1.21.1": 8950, "forge-1.21.1": 8951, "neoforge-26.1.2": 8952, "forge-26.1.2": 8953,
     "neoforge-26.2": 8954, "forge-26.2": 8955, "neoforge-26.3": 8956, "forge-26.3": 8957,
 }
-TIMEOUT = 420
+TIMEOUT = 900
 # Real load problems: the loader could not load a mod, or an error names this mod. Netty and log4j probe lines about native
 # transports on the wrong OS ("Only supported on Linux") are normal noise on Windows and are ignored.
 ERROR_WORDS = re.compile(r"(ModLoadingException|Failed to load mod|Encountered an unexpected exception|FATAL)")
@@ -34,12 +34,16 @@ def check(layer):
     folder = ROOT / layer
     run = folder / "run"
     run.mkdir(exist_ok=True)
-    (run / "eula.txt").write_text("eula=true\n")
+    eula = run / "eula.txt"
+    if not eula.exists() or "eula=true" not in eula.read_text():
+        return f"SERVER SKIP {layer}: eula.txt is missing or not accepted in {run} (Casey accepts it, this script never does)"
     (run / "server.properties").write_text(
         f"server-port={PORTS[layer]}\nonline-mode=false\nlevel-type=minecraft\\:flat\nspawn-protection=0\n"
         "motd=OrangePeel server check\nmax-tick-time=-1\n")
     log = []
-    proc = subprocess.Popen(["cmd", "/c", str(folder / "gradlew.bat"), "runServer", "--no-daemon", "-q"], cwd=folder,
+    # Gradle only through the one global Gradle slot (many sessions build on this PC).
+    proc = subprocess.Popen([r"C:\Program Files\Git\bin\bash.exe", "/c/Users/casey/.claude/tools/gradle-slot.sh", "./gradlew",
+                             "runServer", "--no-daemon", "-q"], cwd=folder,
                             env=dict(os.environ, ORANGEPEEL_SELFTEST="1"), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
 
     def pump():
@@ -57,6 +61,12 @@ def check(layer):
         time.sleep(1)
     time.sleep(2)
     subprocess.run(["taskkill", "/T", "/F", "/PID", str(proc.pid)], capture_output=True)
+    # The Gradle slot wrapper puts a shell between this script and the server, so also stop any server of this layer that
+    # survived (it would keep the world locked for the next run).
+    subprocess.run(["powershell", "-NoProfile", "-Command",
+                    "Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'java' -and $_.CommandLine -like '*"
+                    + str(folder).replace("'", "''") + "*' -and $_.CommandLine -like '*server*' } | "
+                    "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"], capture_output=True)
     t.join(timeout=5)
     out = "\n".join(log)
     (run / "server_check.log").write_text(out, encoding="utf-8")
