@@ -19,3 +19,7 @@ logs/
 crash-reports/
 release/
 dist/
+
+# Python bytecode from the CI planner and tools
+__pycache__/
+*.pyc
